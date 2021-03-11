@@ -9,23 +9,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.pdarcas.myapponthemove.R
+import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
+import com.pdarcas.myapponthemove.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
+    private var _binding:FragmentDashboardBinding by fragmentAutoCleared()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+            ViewModelProvider(this).get(DashboardViewModel::class.java)
+
+        _binding= FragmentDashboardBinding.inflate(inflater,container,false)
+
+        return _binding.root
     }
 }
