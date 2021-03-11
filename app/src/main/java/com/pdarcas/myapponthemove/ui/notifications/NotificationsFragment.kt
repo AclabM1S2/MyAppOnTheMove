@@ -4,14 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.pdarcas.myapponthemove.R
-import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.databinding.FragmentNotificationsBinding
-import com.pdarcas.myapponthemove.ui.home.HomeViewModel
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 
 class NotificationsFragment : Fragment() {
