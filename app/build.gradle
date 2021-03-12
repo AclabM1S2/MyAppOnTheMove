@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id "org.sonarqube" version "3.1.1"
 }
 
 android {
@@ -38,6 +39,13 @@ android {
 
         // for view binding:
         // viewBinding = true
+    }
+    sonarqube {
+        properties {
+            property "sonar.projectKey", "AclabM1S2_MyAppOnTheMove"
+            property "sonar.organization", "aclabm1s2"
+            property "sonar.host.url", "https://sonarcloud.io"
+        }
     }
 }
 

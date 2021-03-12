@@ -14,15 +14,39 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       # The next step will download the dependencies.
+      - restore_cache:
+          keys:
+            - onTheMove-{{ checksum "build.gradle" }}
       - run:
           name: Download Dependencies
           command: |
             sudo chmod +x gradlew
             ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: onTheMove-{{ checksum "build.gradle" }}
       # Then lint and run your tests!
       - run:
           name: Run Tests
           command: ./gradlew lint test
+  sonarcloud:
+    docker:
+      - image: circleci/android:api-28
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - onTheMove-{{ checksum "build.gradle" }}
+      - run:
+          name: Analyze on SonarCloud
+          command: |
+            sudo chmod +x gradlew
+            ./gradlew build sonarqube
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: onTheMove-{{ checksum "build.gradle" }}
 
 
 workflows:
@@ -33,3 +57,7 @@ workflows:
   sample: 
     jobs:
       - build-and-test
+      - sonarcloud:
+          context: SonarCloud
+          requires:
+            - build-and-test
