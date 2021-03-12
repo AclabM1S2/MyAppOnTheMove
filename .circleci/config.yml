@@ -25,7 +25,7 @@ jobs:
           command: ./gradlew lint test
   sonarcloud:
     docker:
-      - image: 'circleci/openjdk:11-jdk'
+      - image: circleci/android:api-28
     steps:
       - checkout
       - run:
