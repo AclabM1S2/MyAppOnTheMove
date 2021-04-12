@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
@@ -26,7 +27,7 @@ class HomeFragment : Fragment()  {
     private val startPoint = GeoPoint(48.13, -1.63)
 
     val waypoints = ArrayList<GeoPoint>()
-    val endPoint = GeoPoint(48.4, -1.9)
+    val endPoint = GeoPoint(50.633333, 3.066667)
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -89,11 +90,14 @@ class HomeFragment : Fragment()  {
 
         }
 
-        val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
+        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
+        val roadManager: RoadManager = MapQuestRoadManager("NJGmHg2Jmj7RFaE4pqME24qAMYjSdjV0")
 
         waypoints.add(startPoint)
         waypoints.add(endPoint)
+        roadManager.addRequestOption("routeType=bicycle");
         val road = roadManager.getRoad(waypoints)
+
 
         if (road.mStatus != Road.STATUS_OK) {
             Toast.makeText(this.context, "Error when loading road", Toast.LENGTH_LONG).show()
