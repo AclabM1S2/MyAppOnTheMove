@@ -1,14 +1,21 @@
 package com.pdarcas.myapponthemove.ui.home
 
+import android.Manifest
 import android.os.Bundle
 import android.os.StrictMode
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -19,9 +26,23 @@ import org.osmdroid.views.overlay.Marker
 
 class HomeFragment : Fragment()  {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private val startPoint = GeoPoint(48.13, -1.63)
+
+    private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
+        if(!permission.values.contains((false))){
+
+
+        }
+
+    }
+
+    private val getDocumentResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
+        uri?.let{
+            Log.d("MyURI",uri.path!!)
+        }
+    }
 
     val waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
@@ -31,8 +52,6 @@ class HomeFragment : Fragment()  {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding= FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -45,6 +64,9 @@ class HomeFragment : Fragment()  {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+
+
+
 
         super.onViewCreated(view, savedInstanceState)
         Configuration.getInstance().userAgentValue = requireContext().packageName
@@ -60,6 +82,8 @@ class HomeFragment : Fragment()  {
         }
 
         Marker(_binding.map).apply {
+
+
             position = startPoint
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             title = "Start point"
@@ -113,7 +137,23 @@ class HomeFragment : Fragment()  {
         _binding.map.getOverlays().add(kmlOverlay);
         _binding.map.invalidate();
 
+        _binding.buttonMyPosition.setOnClickListener{
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+            homeViewModel.location.observe(viewLifecycleOwner, Observer{
+                homeViewModel.onActive()
+                var myPosition = homeViewModel.startLocationUpdates().toString()
+                Log.d("myPosition", myPosition);
+            })
+        }
+
     }
+
+
 
 
 
