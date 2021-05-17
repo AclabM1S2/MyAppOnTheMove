@@ -3,4 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="btn_naviguer">Naviguer</string>
+    <string name="btn_charger_gpx">Charger GPX</string>
+    <string name="btn_fermer">Fermer</string>
 </resources>
