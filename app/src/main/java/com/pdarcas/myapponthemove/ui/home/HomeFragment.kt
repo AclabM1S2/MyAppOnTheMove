@@ -5,18 +5,15 @@ import android.os.StrictMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
-import org.osmdroid.bonuspack.routing.MapQuestRoadManager
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
+import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
 
 
@@ -90,7 +87,7 @@ class HomeFragment : Fragment()  {
 
         }
 
-        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
+/*        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
         val roadManager: RoadManager = MapQuestRoadManager("NJGmHg2Jmj7RFaE4pqME24qAMYjSdjV0")
 
         waypoints.add(startPoint)
@@ -105,6 +102,15 @@ class HomeFragment : Fragment()  {
 
         val roadOverlay = RoadManager.buildRoadOverlay(road)
         _binding.map.getOverlays().add(roadOverlay);
+        _binding.map.invalidate();*/
+
+        val kmlDocument = KmlDocument()
+        val url = "http://mapsengine.google.com/map/kml?forcekml=1&mid=z6IJfj90QEd4.kUUY9FoHFRdE"
+        kmlDocument.parseKMLUrl(url)
+
+        val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(_binding.map, null, null, kmlDocument) as FolderOverlay
+
+        _binding.map.getOverlays().add(kmlOverlay);
         _binding.map.invalidate();
 
     }
