@@ -97,6 +97,13 @@ class HomeFragment : Fragment()  {
 
         }
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+<<<<<<< refs/remotes/origin/pdarcasosmdroidtuto
+=======
+>>>>>>> parent of 9f2cf81... ♻️
+>>>>>>> Stashed changes
         if(myPosition != null){
             Marker(_binding.map).apply {
 
@@ -116,6 +123,8 @@ class HomeFragment : Fragment()  {
                     override fun onMarkerDrag(marker: Marker?) {
                         TODO("Not yet implemented")
                     }
+<<<<<<< HEAD
+=======
 
                     override fun onMarkerDragEnd(marker: Marker?) {
                         TODO("Not yet implemented")
@@ -139,6 +148,59 @@ class HomeFragment : Fragment()  {
         roadManager.addRequestOption("routeType=bicycle");
         val road = roadManager.getRoad(waypoints)
 
+
+        if (road.mStatus != Road.STATUS_OK) {
+            Toast.makeText(this.context, "Error when loading road", Toast.LENGTH_LONG).show()
+        }
+
+        val roadOverlay = RoadManager.buildRoadOverlay(road)
+        _binding.map.getOverlays().add(roadOverlay);
+        _binding.map.invalidate();*/
+
+        val kmlDocument = KmlDocument()
+        val url = "http://mapsengine.google.com/map/kml?forcekml=1&mid=z6IJfj90QEd4.kUUY9FoHFRdE"
+        kmlDocument.parseKMLUrl(url)
+
+        val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(_binding.map, null, null, kmlDocument) as FolderOverlay
+
+        _binding.map.overlays.add(kmlOverlay);
+        _binding.map.invalidate();
+>>>>>>> parent of 9f2cf81... ♻️
+
+                    override fun onMarkerDragEnd(marker: Marker?) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onMarkerDragStart(marker: Marker?) {
+                        TODO("Not yet implemented")
+                    }
+                })
+                _binding.map.getOverlays().add(this)
+
+            }
+        }
+
+
+/*        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
+        val roadManager: RoadManager = MapQuestRoadManager("NJGmHg2Jmj7RFaE4pqME24qAMYjSdjV0")
+
+        waypoints.add(startPoint)
+        waypoints.add(endPoint)
+        roadManager.addRequestOption("routeType=bicycle");
+        val road = roadManager.getRoad(waypoints)
+
+<<<<<<< HEAD
+=======
+            homeViewModel.onActive()
+            homeViewModel.startLocationUpdates()
+            var fusedLocation = homeViewModel.location.fusedLocationClient
+            fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                myPosition = GeoPoint(Location.latitude,Location.longitude)
+                Log.d("myPosition", myPosition.toString());
+
+                this.onViewCreated(view, bundleOf())
+            }
+>>>>>>> parent of 9f2cf81... ♻️
 
         if (road.mStatus != Road.STATUS_OK) {
             Toast.makeText(this.context, "Error when loading road", Toast.LENGTH_LONG).show()
