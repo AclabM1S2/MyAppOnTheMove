@@ -1,6 +1,9 @@
 package com.pdarcas.myapponthemove.ui.home
 
 import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
@@ -10,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,13 +37,20 @@ class HomeFragment : Fragment()  {
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
-
-
-
             homeViewModel.location.observe(viewLifecycleOwner, Observer{
                 homeViewModel.onActive()
-                var myPosition = homeViewModel.startLocationUpdates().toString()
-                Log.d("myPosition", myPosition);
+                homeViewModel.startLocationUpdates()
+                var myPosition = homeViewModel.location.fusedLocationClient
+                myPosition.lastLocation.addOnSuccessListener { Location ->
+                    Log.d("myPosition", Location.toString());
+                }
+
+
+
+
+
+                homeViewModel.onInactive()
+
             })
 
         }
@@ -65,6 +76,7 @@ class HomeFragment : Fragment()  {
 
         return _binding.root
     }
+
 
 
 
@@ -145,18 +157,24 @@ class HomeFragment : Fragment()  {
         _binding.map.getOverlays().add(kmlOverlay);
         _binding.map.invalidate();
 
-        permissionResultLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
+
 
 
 
         _binding.buttonMyPosition.setOnClickListener{
 
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+
+
+
         }
+
+
 
     }
 
