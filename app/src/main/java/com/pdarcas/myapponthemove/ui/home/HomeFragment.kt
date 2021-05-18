@@ -41,19 +41,11 @@ class HomeFragment : Fragment()  {
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
-            homeViewModel.location.observe(viewLifecycleOwner, Observer{
-
-            })
 
         }
 
     }
 
-    private val getMyLocation = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
-        uri?.let{
-            Log.d("MyURI",uri.path!!)
-        }
-    }
 
     val waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
@@ -97,131 +89,7 @@ class HomeFragment : Fragment()  {
 
         }
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-<<<<<<< refs/remotes/origin/pdarcasosmdroidtuto
-=======
->>>>>>> parent of 9f2cf81... ♻️
->>>>>>> Stashed changes
-        if(myPosition != null){
-            Marker(_binding.map).apply {
-
-
-                position = myPosition
-
-                /*setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)*/
-                title = "Start point"
-                //startMarker.setIcon(getResources().getDrawable(R.drawable.marker_kml_point).mutate());
-                //startMarker.setImage(getResources().getDrawable(R.drawable.ic_launcher));
-                //startMarker.setInfoWindow(new MarkerInfoWindow(R.layout.bonuspack_bubble_black, map));
-                //startMarker.setIcon(getResources().getDrawable(R.drawable.marker_kml_point).mutate());
-                //startMarker.setImage(getResources().getDrawable(R.drawable.ic_launcher));
-                //startMarker.setInfoWindow(new MarkerInfoWindow(R.layout.bonuspack_bubble_black, map));
-                isDraggable = true
-                setOnMarkerDragListener(object : Marker.OnMarkerDragListener {
-                    override fun onMarkerDrag(marker: Marker?) {
-                        TODO("Not yet implemented")
-                    }
-<<<<<<< HEAD
-=======
-
-                    override fun onMarkerDragEnd(marker: Marker?) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onMarkerDragStart(marker: Marker?) {
-                        TODO("Not yet implemented")
-                    }
-                })
-                _binding.map.getOverlays().add(this)
-
-            }
-        }
-
-
-/*        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
-        val roadManager: RoadManager = MapQuestRoadManager("NJGmHg2Jmj7RFaE4pqME24qAMYjSdjV0")
-
-        waypoints.add(startPoint)
-        waypoints.add(endPoint)
-        roadManager.addRequestOption("routeType=bicycle");
-        val road = roadManager.getRoad(waypoints)
-
-
-        if (road.mStatus != Road.STATUS_OK) {
-            Toast.makeText(this.context, "Error when loading road", Toast.LENGTH_LONG).show()
-        }
-
-        val roadOverlay = RoadManager.buildRoadOverlay(road)
-        _binding.map.getOverlays().add(roadOverlay);
-        _binding.map.invalidate();*/
-
-        val kmlDocument = KmlDocument()
-        val url = "http://mapsengine.google.com/map/kml?forcekml=1&mid=z6IJfj90QEd4.kUUY9FoHFRdE"
-        kmlDocument.parseKMLUrl(url)
-
-        val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(_binding.map, null, null, kmlDocument) as FolderOverlay
-
-        _binding.map.overlays.add(kmlOverlay);
         _binding.map.invalidate();
->>>>>>> parent of 9f2cf81... ♻️
-
-                    override fun onMarkerDragEnd(marker: Marker?) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onMarkerDragStart(marker: Marker?) {
-                        TODO("Not yet implemented")
-                    }
-                })
-                _binding.map.getOverlays().add(this)
-
-            }
-        }
-
-
-/*        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
-        val roadManager: RoadManager = MapQuestRoadManager("NJGmHg2Jmj7RFaE4pqME24qAMYjSdjV0")
-
-        waypoints.add(startPoint)
-        waypoints.add(endPoint)
-        roadManager.addRequestOption("routeType=bicycle");
-        val road = roadManager.getRoad(waypoints)
-
-<<<<<<< HEAD
-=======
-            homeViewModel.onActive()
-            homeViewModel.startLocationUpdates()
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                Log.d("myPosition", myPosition.toString());
-
-                this.onViewCreated(view, bundleOf())
-            }
->>>>>>> parent of 9f2cf81... ♻️
-
-        if (road.mStatus != Road.STATUS_OK) {
-            Toast.makeText(this.context, "Error when loading road", Toast.LENGTH_LONG).show()
-        }
-
-        val roadOverlay = RoadManager.buildRoadOverlay(road)
-        _binding.map.getOverlays().add(roadOverlay);
-        _binding.map.invalidate();*/
-
-        val kmlDocument = KmlDocument()
-        val url = "http://mapsengine.google.com/map/kml?forcekml=1&mid=z6IJfj90QEd4.kUUY9FoHFRdE"
-        kmlDocument.parseKMLUrl(url)
-
-        val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(_binding.map, null, null, kmlDocument) as FolderOverlay
-
-        _binding.map.overlays.add(kmlOverlay);
-        _binding.map.invalidate();
-
-
-
-
 
         _binding.buttonMyPosition.setOnClickListener{
 
@@ -237,7 +105,14 @@ class HomeFragment : Fragment()  {
             var fusedLocation = homeViewModel.location.fusedLocationClient
             fusedLocation.lastLocation.addOnSuccessListener { Location ->
                 myPosition = GeoPoint(Location.latitude,Location.longitude)
-                Log.d("myPosition", myPosition.toString());
+
+                if(myPosition != null){
+                    Marker(_binding.map).apply {
+                        position = myPosition
+                        _binding.map.getOverlays().add(this)
+
+                    }
+                }
 
                 this.onViewCreated(view, bundleOf())
             }
