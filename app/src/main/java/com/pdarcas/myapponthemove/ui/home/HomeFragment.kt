@@ -154,7 +154,7 @@ class HomeFragment : Fragment()  {
 
         val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(_binding.map, null, null, kmlDocument) as FolderOverlay
 
-        _binding.map.getOverlays().add(kmlOverlay);
+        _binding.map.overlays.add(kmlOverlay);
         _binding.map.invalidate();
 
 
