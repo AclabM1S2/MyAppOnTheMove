@@ -14,7 +14,9 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
@@ -33,23 +35,11 @@ class HomeFragment : Fragment()  {
     /*private lateinit var homeViewModel: HomeViewModel*/
     private val homeViewModel: HomeViewModel by viewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
-    private val startPoint = GeoPoint(48.13, -1.63)
+    private var startPoint = GeoPoint(48.13, -1.63)
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
             homeViewModel.location.observe(viewLifecycleOwner, Observer{
-                homeViewModel.onActive()
-                homeViewModel.startLocationUpdates()
-                var myPosition = homeViewModel.location.fusedLocationClient
-                myPosition.lastLocation.addOnSuccessListener { Location ->
-                    Log.d("myPosition", Location.toString());
-                }
-
-
-
-
-
-                homeViewModel.onInactive()
 
             })
 
@@ -169,6 +159,17 @@ class HomeFragment : Fragment()  {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
+
+            homeViewModel.onActive()
+            homeViewModel.startLocationUpdates()
+            var myPosition = homeViewModel.location.fusedLocationClient
+            myPosition.lastLocation.addOnSuccessListener { Location ->
+                startPoint = GeoPoint(Location.latitude,Location.longitude)
+                Log.d("myPosition", startPoint.toString());
+                this.onViewCreated(view, bundleOf())
+            }
+
+            homeViewModel.onInactive()
 
 
 
