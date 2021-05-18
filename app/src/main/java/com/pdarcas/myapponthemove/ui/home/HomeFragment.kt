@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -35,7 +36,7 @@ class HomeFragment : Fragment()  {
     /*private lateinit var homeViewModel: HomeViewModel*/
     private val homeViewModel: HomeViewModel by viewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
-    private var startPoint = GeoPoint(48.13, -1.63)
+    private var myPosition : GeoPoint? = null
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
@@ -47,7 +48,7 @@ class HomeFragment : Fragment()  {
 
     }
 
-    private val getDocumentResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
+    private val getMyLocation = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
         uri?.let{
             Log.d("MyURI",uri.path!!)
         }
@@ -86,40 +87,47 @@ class HomeFragment : Fragment()  {
 
             val mapController = controller
             mapController.setZoom(3.0)
-            mapController.setCenter(startPoint)
+            if(myPosition != null){
+                mapController.setCenter(myPosition)
+            }
+
             this.isTilesScaledToDpi=true
 
         }
 
-        Marker(_binding.map).apply {
+        if(myPosition != null){
+            Marker(_binding.map).apply {
 
 
-            position = startPoint
-            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            title = "Start point"
-            //startMarker.setIcon(getResources().getDrawable(R.drawable.marker_kml_point).mutate());
-            //startMarker.setImage(getResources().getDrawable(R.drawable.ic_launcher));
-            //startMarker.setInfoWindow(new MarkerInfoWindow(R.layout.bonuspack_bubble_black, map));
-            //startMarker.setIcon(getResources().getDrawable(R.drawable.marker_kml_point).mutate());
-            //startMarker.setImage(getResources().getDrawable(R.drawable.ic_launcher));
-            //startMarker.setInfoWindow(new MarkerInfoWindow(R.layout.bonuspack_bubble_black, map));
-            isDraggable = true
-            setOnMarkerDragListener(object : Marker.OnMarkerDragListener {
-                override fun onMarkerDrag(marker: Marker?) {
-                    TODO("Not yet implemented")
-                }
+                position = myPosition
 
-                override fun onMarkerDragEnd(marker: Marker?) {
-                    TODO("Not yet implemented")
-                }
+                /*setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)*/
+                title = "Start point"
+                //startMarker.setIcon(getResources().getDrawable(R.drawable.marker_kml_point).mutate());
+                //startMarker.setImage(getResources().getDrawable(R.drawable.ic_launcher));
+                //startMarker.setInfoWindow(new MarkerInfoWindow(R.layout.bonuspack_bubble_black, map));
+                //startMarker.setIcon(getResources().getDrawable(R.drawable.marker_kml_point).mutate());
+                //startMarker.setImage(getResources().getDrawable(R.drawable.ic_launcher));
+                //startMarker.setInfoWindow(new MarkerInfoWindow(R.layout.bonuspack_bubble_black, map));
+                isDraggable = true
+                setOnMarkerDragListener(object : Marker.OnMarkerDragListener {
+                    override fun onMarkerDrag(marker: Marker?) {
+                        TODO("Not yet implemented")
+                    }
 
-                override fun onMarkerDragStart(marker: Marker?) {
-                    TODO("Not yet implemented")
-                }
-            })
-            _binding.map.getOverlays().add(this)
+                    override fun onMarkerDragEnd(marker: Marker?) {
+                        TODO("Not yet implemented")
+                    }
 
+                    override fun onMarkerDragStart(marker: Marker?) {
+                        TODO("Not yet implemented")
+                    }
+                })
+                _binding.map.getOverlays().add(this)
+
+            }
         }
+
 
 /*        //val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
         val roadManager: RoadManager = MapQuestRoadManager("NJGmHg2Jmj7RFaE4pqME24qAMYjSdjV0")
@@ -162,26 +170,17 @@ class HomeFragment : Fragment()  {
 
             homeViewModel.onActive()
             homeViewModel.startLocationUpdates()
-            var myPosition = homeViewModel.location.fusedLocationClient
-            myPosition.lastLocation.addOnSuccessListener { Location ->
-                startPoint = GeoPoint(Location.latitude,Location.longitude)
-                Log.d("myPosition", startPoint.toString());
+            var fusedLocation = homeViewModel.location.fusedLocationClient
+            fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                myPosition = GeoPoint(Location.latitude,Location.longitude)
+                Log.d("myPosition", myPosition.toString());
+
                 this.onViewCreated(view, bundleOf())
             }
 
             homeViewModel.onInactive()
-
-
-
         }
 
-
-
     }
-
-
-
-
-
 
 }
