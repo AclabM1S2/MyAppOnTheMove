@@ -13,7 +13,7 @@ import com.google.android.gms.location.LocationServices
 
 class LocationLiveData(context: Context):LiveData<Location>() {
 
-    private var fusedLocationClient=LocationServices.getFusedLocationProviderClient(context)
+    var fusedLocationClient=LocationServices.getFusedLocationProviderClient(context)
 
     public override fun onInactive() {
         super.onInactive()
