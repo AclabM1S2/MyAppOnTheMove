@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
+        android:name=".data.di.BaseApplication"
         android:theme="@style/Theme.MyAppOnTheMove">
         <activity
             android:name=".ui.activities.MainActivity"

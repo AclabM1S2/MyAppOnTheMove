@@ -26,6 +26,7 @@ import org.osmdroid.views.overlay.Marker
 
 class HomeFragment : Fragment()  {
 
+    /*private lateinit var homeViewModel: HomeViewModel*/
     private val homeViewModel: HomeViewModel by viewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private val startPoint = GeoPoint(48.13, -1.63)
@@ -33,6 +34,13 @@ class HomeFragment : Fragment()  {
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
 
+
+
+            homeViewModel.location.observe(viewLifecycleOwner, Observer{
+                homeViewModel.onActive()
+                var myPosition = homeViewModel.startLocationUpdates().toString()
+                Log.d("myPosition", myPosition);
+            })
 
         }
 
@@ -137,18 +145,17 @@ class HomeFragment : Fragment()  {
         _binding.map.getOverlays().add(kmlOverlay);
         _binding.map.invalidate();
 
-        _binding.buttonMyPosition.setOnClickListener{
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
+        permissionResultLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             )
-            homeViewModel.location.observe(viewLifecycleOwner, Observer{
-                homeViewModel.onActive()
-                var myPosition = homeViewModel.startLocationUpdates().toString()
-                Log.d("myPosition", myPosition);
-            })
+        )
+
+
+
+        _binding.buttonMyPosition.setOnClickListener{
+
         }
 
     }
