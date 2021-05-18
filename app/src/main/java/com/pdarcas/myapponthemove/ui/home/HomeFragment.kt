@@ -25,6 +25,8 @@ import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.osmdroid.bonuspack.kml.KmlDocument
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -38,6 +40,7 @@ class HomeFragment : Fragment()  {
     private val homeViewModel: HomeViewModel by viewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
+    private var tracking = false
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
@@ -46,14 +49,13 @@ class HomeFragment : Fragment()  {
 
     }
 
-
     val waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         _binding= FragmentHomeBinding.inflate(inflater, container, false)
@@ -118,6 +120,50 @@ class HomeFragment : Fragment()  {
             }
 
             homeViewModel.onInactive()
+        }
+
+        _binding.buttonRecord.setOnClickListener{
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+
+            val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
+
+            if( tracking == false ){
+                tracking = true
+            }else{
+                tracking = false
+            }
+
+
+            if(tracking == true){
+                homeViewModel.onActive()
+                while(tracking == true){
+                    homeViewModel.startLocationUpdates()
+                    var fusedLocation = homeViewModel.location.fusedLocationClient
+                    fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                        var currentLocation = GeoPoint(Location.latitude,Location.longitude)
+                        Log.d("Location ON",currentLocation.toString())
+                        if(currentLocation != null){
+                            waypoints.add(currentLocation!!)
+                            val road = roadManager.getRoad(waypoints)
+                            val roadOverlay = RoadManager.buildRoadOverlay(road)
+                            _binding.map.getOverlays().add(roadOverlay);
+                            _binding.map.invalidate();
+                        }
+                        this.onViewCreated(view, bundleOf())
+                    }
+
+                }
+            }else {
+                Log.d("Location OFF","toto")
+                homeViewModel.onInactive()
+
+
+            }
         }
 
     }
