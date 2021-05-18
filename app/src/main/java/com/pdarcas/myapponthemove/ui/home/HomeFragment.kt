@@ -1,6 +1,7 @@
 package com.pdarcas.myapponthemove.ui.home
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
@@ -71,6 +72,7 @@ class HomeFragment : Fragment()  {
 
 
 
+    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
