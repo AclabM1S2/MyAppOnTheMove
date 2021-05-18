@@ -49,11 +49,6 @@ class HomeFragment : Fragment()  {
 
     }
 
-    private val getMyLocation = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
-        uri?.let{
-            Log.d("MyURI",uri.path!!)
-        }
-    }
 
     val waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
@@ -69,17 +64,11 @@ class HomeFragment : Fragment()  {
         return _binding.root
     }
 
-
-
-
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
-
-
 
         super.onViewCreated(view, savedInstanceState)
         Configuration.getInstance().userAgentValue = requireContext().packageName
@@ -97,6 +86,7 @@ class HomeFragment : Fragment()  {
 
         }
 
+<<<<<<< refs/remotes/origin/pdarcasosmdroidtuto
         if(myPosition != null){
             Marker(_binding.map).apply {
 
@@ -155,34 +145,12 @@ class HomeFragment : Fragment()  {
         val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(_binding.map, null, null, kmlDocument) as FolderOverlay
 
         _binding.map.overlays.add(kmlOverlay);
+=======
+>>>>>>> :recycle:
         _binding.map.invalidate();
 
-
-
-
-
-        _binding.buttonMyPosition.setOnClickListener{
-
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-
-            homeViewModel.onActive()
-            homeViewModel.startLocationUpdates()
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                Log.d("myPosition", myPosition.toString());
-
-                this.onViewCreated(view, bundleOf())
-            }
-
-            homeViewModel.onInactive()
-        }
-
     }
+
+
 
 }
