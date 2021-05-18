@@ -13,4 +13,20 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="MyBottomSheet.ShapeAppearanceOverlay" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeTopRight">8dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="MyModalBottomSheet.Style" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/MyBottomSheet.ShapeAppearanceOverlay</item>
+    </style>
+    <style name="MyBottomSheet.ThemeOverlay" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/MyModalBottomSheet.Style</item>
+    </style>
+
 </resources>
