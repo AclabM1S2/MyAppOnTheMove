@@ -26,6 +26,7 @@ import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -72,9 +73,6 @@ class HomeFragment : Fragment()  {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-
-
-
         super.onViewCreated(view, savedInstanceState)
         Configuration.getInstance().userAgentValue = requireContext().packageName
         _binding.map.apply {
@@ -86,9 +84,7 @@ class HomeFragment : Fragment()  {
             if(myPosition != null){
                 mapController.setCenter(myPosition)
             }
-
             this.isTilesScaledToDpi=true
-
         }
 
         _binding.map.invalidate();
@@ -107,22 +103,18 @@ class HomeFragment : Fragment()  {
             var fusedLocation = homeViewModel.location.fusedLocationClient
             fusedLocation.lastLocation.addOnSuccessListener { Location ->
                 myPosition = GeoPoint(Location.latitude,Location.longitude)
-
                 if(myPosition != null){
                     Marker(_binding.map).apply {
                         position = myPosition
                         _binding.map.getOverlays().add(this)
-
                     }
                 }
-
                 this.onViewCreated(view, bundleOf())
-            }
-
+             }
             homeViewModel.onInactive()
         }
 
-        _binding.buttonRecord.setOnClickListener{
+        _binding.buttonStart.setOnClickListener{
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -131,39 +123,34 @@ class HomeFragment : Fragment()  {
             )
 
             val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
-
-            if( tracking == false ){
-                tracking = true
-            }else{
-                tracking = false
-            }
-
-
-            if(tracking == true){
+   /*         roadManager.addRequestOption("routeType=pedestrian")
+*/
                 homeViewModel.onActive()
-                while(tracking == true){
-                    homeViewModel.startLocationUpdates()
-                    var fusedLocation = homeViewModel.location.fusedLocationClient
-                    fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                        var currentLocation = GeoPoint(Location.latitude,Location.longitude)
-                        Log.d("Location ON",currentLocation.toString())
-                        if(currentLocation != null){
-                            waypoints.add(currentLocation!!)
-                            val road = roadManager.getRoad(waypoints)
-                            val roadOverlay = RoadManager.buildRoadOverlay(road)
-                            _binding.map.getOverlays().add(roadOverlay);
-                            _binding.map.invalidate();
+                Log.d("PositionGeoLoc 0",homeViewModel.onActive().equals(false).toString())
+
+                        homeViewModel.startLocationUpdates()
+                        var fusedLocation = homeViewModel.location.fusedLocationClient
+                        fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                            var currentLocation = GeoPoint(Location.latitude,Location.longitude)
+                            Log.d("PositionGeoLoc 1",currentLocation.toString())
+                            if(currentLocation != null){
+                                waypoints.add(currentLocation!!)
+                                val road = roadManager.getRoad(waypoints)
+                                if (road.mStatus != Road.STATUS_OK){
+                                    Log.d("Road error bro : ",road.mStatus.toString())
+                                }
+                                roadManager.addRequestOption("routeType=bicycle")
+                                val roadOverlay = RoadManager.buildRoadOverlay(road)
+                                _binding.map.getOverlays().add(roadOverlay);
+                                Log.d("PositionGeoLoc 2",currentLocation.toString() )
+                            }
+                            this.onViewCreated(view, bundleOf())
                         }
-                        this.onViewCreated(view, bundleOf())
-                    }
 
-                }
-            }else {
-                Log.d("Location OFF","toto")
-                homeViewModel.onInactive()
+        }
 
-
-            }
+        _binding.buttonStop.setOnClickListener{
+            homeViewModel.onInactive()
         }
 
     }

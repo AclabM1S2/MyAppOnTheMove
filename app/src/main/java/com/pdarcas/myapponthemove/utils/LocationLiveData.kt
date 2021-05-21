@@ -15,10 +15,13 @@ class LocationLiveData(context: Context):LiveData<Location>() {
 
     var fusedLocationClient=LocationServices.getFusedLocationProviderClient(context)
 
+/*    public fun isActive(){
+        return fusedLocationClient.applicationContext().
+    }*/
+
     public override fun onInactive() {
         super.onInactive()
         fusedLocationClient.removeLocationUpdates(locationCallback)
-
 
     }
 
@@ -44,6 +47,7 @@ class LocationLiveData(context: Context):LiveData<Location>() {
         )
     }
 
+
     private val locationCallback=object:LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult?){
             locationResult?:return
@@ -59,7 +63,8 @@ class LocationLiveData(context: Context):LiveData<Location>() {
 
     companion object {
         val locationRequest: LocationRequest =LocationRequest.create().apply{
-            smallestDisplacement=2000f
+            interval=3000
+            /*smallestDisplacement=2000f*/
             priority=LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
