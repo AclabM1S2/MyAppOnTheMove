@@ -22,6 +22,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.pdarcas.myapponthemove.R
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,7 +38,7 @@ import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
 
-
+const val REQUEST_KEY = "request"
 class HomeFragment : Fragment()  {
 
     /*private lateinit var homeViewModel: HomeViewModel*/
@@ -44,6 +47,8 @@ class HomeFragment : Fragment()  {
     private var myPosition : GeoPoint? = null
     private var tracking = false
     private var positionUser = false
+    private var charger=false
+    private var btnShowDialog: FloatingActionButton? = null
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
@@ -71,13 +76,47 @@ class HomeFragment : Fragment()  {
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setFragmentResultListener("requestKey") { _, bundle ->
-            Log.d("before result","passage setFragmentResultListener")
-            positionUser = bundle.getBoolean("bundleKey")
-            Log.d("after result","passage setFragmentResultListener")
-        }
+
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+
+
+        btnShowDialog = view.findViewById(R.id.fab)
+        btnShowDialog?.setOnClickListener {
+            findNavController().navigate(R.id.homeDialog)
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            REQUEST_KEY,
+            this
+        ) { key, data ->
+            if (key == REQUEST_KEY) {
+                val result = data.getString("data").let { action ->
+                    if (action != null) {
+                        Log.d("set action", action)
+                        if(action == "position"){
+                            tracking=false;
+                            charger=false;
+                            positionUser=true
+                            Log.d("action","position user true goo")
+                        }else if(action=="naviguer"){
+                            positionUser=false;
+                            charger=false;
+                            tracking=true;
+                            Log.d("action","Go Tracking")
+                        }else if(action=="charger"){
+                            positionUser=false;
+                            tracking=false;
+                            charger=true;
+                            Log.d("action","User want to open gpx")
+                        }else{
+                            Log.d("action","just close without action")
+                        }
+
+                    }
+                }
+            }
+        }
 
         super.onViewCreated(view, savedInstanceState)
         Configuration.getInstance().userAgentValue = requireContext().packageName
@@ -120,30 +159,6 @@ class HomeFragment : Fragment()  {
             homeViewModel.onInactive()
         }
 
-        if(positionUser){
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-
-            homeViewModel.onActive()
-            homeViewModel.startLocationUpdates()
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                if(myPosition != null){
-                    Marker(_binding.map).apply {
-                        position = myPosition
-                        _binding.map.overlays.add(this)
-                    }
-                }
-                this.onViewCreated(view, bundleOf())
-            }
-            homeViewModel.onInactive()
-
-        }
 
         _binding.buttonStart.setOnClickListener{
             permissionResultLauncher.launch(
