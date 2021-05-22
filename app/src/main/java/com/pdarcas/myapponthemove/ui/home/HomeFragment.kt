@@ -76,7 +76,7 @@ class HomeFragment : Fragment()  {
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        super.onViewCreated(view, savedInstanceState)
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
@@ -86,39 +86,35 @@ class HomeFragment : Fragment()  {
             findNavController().navigate(R.id.homeDialog)
         }
 
-        parentFragmentManager.setFragmentResultListener(
-            REQUEST_KEY,
-            this
-        ) { key, data ->
-            if (key == REQUEST_KEY) {
-                val result = data.getString("data").let { action ->
-                    if (action != null) {
-                        Log.d("set action", action)
-                        if(action == "position"){
-                            tracking=false;
-                            charger=false;
-                            positionUser=true
-                            Log.d("action","position user true goo")
-                        }else if(action=="naviguer"){
-                            positionUser=false;
-                            charger=false;
-                            tracking=true;
-                            Log.d("action","Go Tracking")
-                        }else if(action=="charger"){
-                            positionUser=false;
-                            tracking=false;
-                            charger=true;
-                            Log.d("action","User want to open gpx")
-                        }else{
-                            Log.d("action","just close without action")
-                        }
-
-                    }
+        setFragmentResultListener(REQUEST_KEY) { _, bundle ->
+            Log.d("before result","passage setFragmentResultListener")
+            var action: String? = bundle.getString("data")
+            if (action != null) {
+                Log.d("set action", action)
+                if(action == "position"){
+                    tracking=false;
+                    charger=false;
+                    positionUser=true
+                    Log.d("action","position user true goo")
+                }else if(action=="naviguer"){
+                    positionUser=false;
+                    charger=false;
+                    tracking=true;
+                    Log.d("action","Go Tracking")
+                }else if(action=="charger"){
+                    positionUser=false;
+                    tracking=false;
+                    charger=true;
+                    Log.d("action","User want to open gpx")
+                }else{
+                    Log.d("action","just close without action")
                 }
+
             }
+            Log.d("after result","passage setFragmentResultListener")
         }
 
-        super.onViewCreated(view, savedInstanceState)
+
         Configuration.getInstance().userAgentValue = requireContext().packageName
         _binding.map.apply {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT)

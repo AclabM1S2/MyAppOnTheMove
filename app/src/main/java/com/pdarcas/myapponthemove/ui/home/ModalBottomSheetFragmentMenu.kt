@@ -57,19 +57,27 @@ class ModalBottomSheetFragmentMenu: BottomSheetDialogFragment() {
     }
 
     private fun setListeners() {
-        btnCharger?.setOnClickListener { setResult("charger") }
-        btnNaviguer?.setOnClickListener { setResult("naviguer") }
-        btnPosition?.setOnClickListener { setResult("position") }
+        btnCharger?.setOnClickListener { setFragmentResult(
+            REQUEST_KEY,
+            bundleOf("data" to "charger"))
+            findNavController().popBackStack()}
+        btnNaviguer?.setOnClickListener { setFragmentResult(
+            REQUEST_KEY,
+            bundleOf("data" to "naviguer"))
+            findNavController().popBackStack()}
+        btnPosition?.setOnClickListener {
+            setFragmentResult(
+                REQUEST_KEY,
+                bundleOf("data" to "position"))
+            findNavController().popBackStack()
+        }
 
     }
 
-    private fun setResult(action: String) {
-        parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf("data" to action))
-        findNavController().popBackStack()
-    }
+
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        setResult("")
+        dismiss()
     }
 }
