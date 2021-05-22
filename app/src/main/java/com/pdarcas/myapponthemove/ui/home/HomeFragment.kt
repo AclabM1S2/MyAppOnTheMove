@@ -19,6 +19,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
@@ -42,6 +43,7 @@ class HomeFragment : Fragment()  {
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
     private var tracking = false
+    private var positionUser = false
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
@@ -69,7 +71,11 @@ class HomeFragment : Fragment()  {
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        setFragmentResultListener("requestKey") { _, bundle ->
+            Log.d("before result","passage setFragmentResultListener")
+            positionUser = bundle.getBoolean("bundleKey")
+            Log.d("after result","passage setFragmentResultListener")
+        }
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
@@ -106,12 +112,37 @@ class HomeFragment : Fragment()  {
                 if(myPosition != null){
                     Marker(_binding.map).apply {
                         position = myPosition
-                        _binding.map.getOverlays().add(this)
+                        _binding.map.overlays.add(this)
                     }
                 }
                 this.onViewCreated(view, bundleOf())
              }
             homeViewModel.onInactive()
+        }
+
+        if(positionUser){
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+
+            homeViewModel.onActive()
+            homeViewModel.startLocationUpdates()
+            var fusedLocation = homeViewModel.location.fusedLocationClient
+            fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                myPosition = GeoPoint(Location.latitude,Location.longitude)
+                if(myPosition != null){
+                    Marker(_binding.map).apply {
+                        position = myPosition
+                        _binding.map.overlays.add(this)
+                    }
+                }
+                this.onViewCreated(view, bundleOf())
+            }
+            homeViewModel.onInactive()
+
         }
 
         _binding.buttonStart.setOnClickListener{
@@ -133,17 +164,15 @@ class HomeFragment : Fragment()  {
                         fusedLocation.lastLocation.addOnSuccessListener { Location ->
                             var currentLocation = GeoPoint(Location.latitude,Location.longitude)
                             Log.d("PositionGeoLoc 1",currentLocation.toString())
-                            if(currentLocation != null){
-                                waypoints.add(currentLocation!!)
-                                val road = roadManager.getRoad(waypoints)
-                                if (road.mStatus != Road.STATUS_OK){
-                                    Log.d("Road error bro : ",road.mStatus.toString())
-                                }
-                                roadManager.addRequestOption("routeType=bicycle")
-                                val roadOverlay = RoadManager.buildRoadOverlay(road)
-                                _binding.map.getOverlays().add(roadOverlay);
-                                Log.d("PositionGeoLoc 2",currentLocation.toString() )
+                            waypoints.add(currentLocation!!)
+                            val road = roadManager.getRoad(waypoints)
+                            if (road.mStatus != Road.STATUS_OK){
+                                Log.d("Road error bro : ",road.mStatus.toString())
                             }
+                            roadManager.addRequestOption("routeType=bicycle")
+                            val roadOverlay = RoadManager.buildRoadOverlay(road)
+                            _binding.map.overlays.add(roadOverlay);
+                            Log.d("PositionGeoLoc 2",currentLocation.toString() )
                             this.onViewCreated(view, bundleOf())
                         }
 

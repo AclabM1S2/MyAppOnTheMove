@@ -7,6 +7,7 @@
     android:paddingTop="16dp"
     android:layout_height="match_parent">
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_naviguer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.Button"
@@ -16,6 +17,7 @@
         android:layout_marginRight="16dp"
         />
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_charger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -26,12 +28,12 @@
         android:textColor="@android:color/white"
         />
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_close"
+        android:id="@+id/btn_position"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.Button"
         app:backgroundTint="@color/colorAccent"
-        android:text="@string/btn_fermer"
+        android:text="@string/btn_position"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         />

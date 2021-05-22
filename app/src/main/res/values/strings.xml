@@ -5,5 +5,5 @@
     <string name="title_notifications">Notifications</string>
     <string name="btn_naviguer">Naviguer</string>
     <string name="btn_charger_gpx">Charger GPX</string>
-    <string name="btn_fermer">Fermer</string>
+    <string name="btn_position">Ma position</string>
 </resources>
