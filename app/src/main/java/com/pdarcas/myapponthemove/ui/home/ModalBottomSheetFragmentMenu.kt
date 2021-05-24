@@ -56,39 +56,15 @@ class ModalBottomSheetFragmentMenu: BottomSheetDialogFragment() {
         btnPosition=view.findViewById(R.id.btn_position)
         btnCharger = view.findViewById(R.id.btn_charger)
         btnNaviguer=view.findViewById(R.id.btn_naviguer)
-        btnPosition?.setOnClickListener { model.actionPosition(position = true)
-            findNavController().popBackStack()}
-        btnNaviguer?.setOnClickListener { model.actionNaviguer(naviguer = true)
-            findNavController().popBackStack()}
-        btnCharger?.setOnClickListener { model.actionCharger(charger = true)
-            findNavController().popBackStack()}
-
-
-        //setListeners()
-    }
-
-    private fun setListeners() {
-        btnCharger?.setOnClickListener { setFragmentResult(
-            REQUEST_KEY,
-            bundleOf("data" to "charger"))
-            findNavController().popBackStack()}
-        btnNaviguer?.setOnClickListener { setFragmentResult(
-            REQUEST_KEY,
-            bundleOf("data" to "naviguer"))
-            findNavController().popBackStack()}
-        btnPosition?.setOnClickListener {
-            setFragmentResult(
-                REQUEST_KEY,
-                bundleOf("data" to "position"))
-            findNavController().popBackStack()
-        }
+        btnPosition?.setOnClickListener { model.positionUser.value=true
+            dismiss()}
+        btnNaviguer?.setOnClickListener { model.actionNaviguer.value=true
+            dismiss()}
+        btnCharger?.setOnClickListener { model.actionCharger.value=true
+            dismiss()}
 
     }
 
 
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        dismiss()
-    }
 }

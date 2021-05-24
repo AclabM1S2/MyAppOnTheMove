@@ -56,9 +56,11 @@ class HomeFragment : Fragment()  {
     /* Boolean pour charger un gpx */
     private var charger:Boolean = false
 
-    private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
-        if(!permission.values.contains((false))){
 
+    private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
+        Log.e("PermissionCheck","Appel permission")
+        if(!permission.values.contains((false))){
+            Log.d("PermissionCheck","Dans le IF")
         }
 
     }
@@ -92,19 +94,6 @@ class HomeFragment : Fragment()  {
             findNavController().navigate(R.id.homeDialog)
         }
 
-        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        model.positionUser.observe(viewLifecycleOwner, Observer {
-            positionUser = it
-            Log.d("Home","RECEIVED start for geo")
-        })
-        model.actionCharger.observe(viewLifecycleOwner, Observer {
-            charger = it
-            Log.d("Home","RECEIVED start for open folder")
-        })
-        model.actionNaviguer.observe(viewLifecycleOwner, Observer {
-            naviguer = it
-            Log.d("Home","RECEIVED start for navigation")
-        })
 
         Configuration.getInstance().userAgentValue = requireContext().packageName
         _binding.map.apply {
@@ -148,27 +137,7 @@ class HomeFragment : Fragment()  {
 
         if(positionUser){
             Log.d("Home","START")
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
 
-            homeViewModel.onActive()
-            homeViewModel.startLocationUpdates()
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                if(myPosition != null){
-                    Marker(_binding.map).apply {
-                        position = myPosition
-                        _binding.map.overlays.add(this)
-                    }
-                }
-                this.onViewCreated(view, bundleOf())
-            }
-            homeViewModel.onInactive()
 
         }
         _binding.buttonStart.setOnClickListener{
@@ -190,7 +159,7 @@ class HomeFragment : Fragment()  {
                         fusedLocation.lastLocation.addOnSuccessListener { Location ->
                             var currentLocation = GeoPoint(Location.latitude,Location.longitude)
                             Log.d("PositionGeoLoc 1",currentLocation.toString())
-                            waypoints.add(currentLocation!!)
+                            waypoints.add(currentLocation)
                             val road = roadManager.getRoad(waypoints)
                             if (road.mStatus != Road.STATUS_OK){
                                 Log.d("Road error bro : ",road.mStatus.toString())
@@ -207,6 +176,48 @@ class HomeFragment : Fragment()  {
         _binding.buttonStop.setOnClickListener{
             homeViewModel.onInactive()
         }
+
+        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+        model.positionUser.observe(viewLifecycleOwner, Observer {
+
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+
+            homeViewModel.onActive()
+            homeViewModel.startLocationUpdates()
+            var fusedLocation = homeViewModel.location.fusedLocationClient
+            fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                myPosition = GeoPoint(Location.latitude,Location.longitude)
+                if(myPosition != null){
+                    Marker(_binding.map).apply {
+                        position = myPosition
+                        _binding.map.overlays.add(this)
+                        positionUser=false
+                    }
+                }
+                this.onViewCreated(view, bundleOf())
+
+            }
+            homeViewModel.onInactive()
+
+
+        }
+        )
+        
+
+        model.actionCharger.observe(viewLifecycleOwner, Observer {
+            charger = it
+            Log.d("Home","RECEIVED start for open folder")
+        })
+        model.actionNaviguer.observe(viewLifecycleOwner, Observer {
+            naviguer = it
+            Log.d("Home","RECEIVED start for navigation")
+        })
 
     }
 
