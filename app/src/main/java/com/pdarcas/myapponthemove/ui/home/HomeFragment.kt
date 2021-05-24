@@ -46,9 +46,15 @@ class HomeFragment : Fragment()  {
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
     private var tracking = false
-    private var positionUser = false
-    private var charger=false
+    lateinit var model: SharedViewModel
+    /* Bouton pour ouvrir la modal*/
     private var btnShowDialog: FloatingActionButton? = null
+    /* Boolean pour lancer la geolocalisation */
+    private var positionUser:Boolean = false
+    /* Boolean pour lancer la navigation */
+    private var naviguer:Boolean = false
+    /* Boolean pour charger un gpx */
+    private var charger:Boolean = false
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         if(!permission.values.contains((false))){
@@ -86,34 +92,19 @@ class HomeFragment : Fragment()  {
             findNavController().navigate(R.id.homeDialog)
         }
 
-        setFragmentResultListener(REQUEST_KEY) { _, bundle ->
-            Log.d("before result","passage setFragmentResultListener")
-            var action: String? = bundle.getString("data")
-            if (action != null) {
-                Log.d("set action", action)
-                if(action == "position"){
-                    tracking=false;
-                    charger=false;
-                    positionUser=true
-                    Log.d("action","position user true goo")
-                }else if(action=="naviguer"){
-                    positionUser=false;
-                    charger=false;
-                    tracking=true;
-                    Log.d("action","Go Tracking")
-                }else if(action=="charger"){
-                    positionUser=false;
-                    tracking=false;
-                    charger=true;
-                    Log.d("action","User want to open gpx")
-                }else{
-                    Log.d("action","just close without action")
-                }
-
-            }
-            Log.d("after result","passage setFragmentResultListener")
-        }
-
+        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        model.positionUser.observe(viewLifecycleOwner, Observer {
+            positionUser = it
+            Log.d("Home","RECEIVED start for geo")
+        })
+        model.actionCharger.observe(viewLifecycleOwner, Observer {
+            charger = it
+            Log.d("Home","RECEIVED start for open folder")
+        })
+        model.actionNaviguer.observe(viewLifecycleOwner, Observer {
+            naviguer = it
+            Log.d("Home","RECEIVED start for navigation")
+        })
 
         Configuration.getInstance().userAgentValue = requireContext().packageName
         _binding.map.apply {
@@ -155,7 +146,31 @@ class HomeFragment : Fragment()  {
             homeViewModel.onInactive()
         }
 
+        if(positionUser){
+            Log.d("Home","START")
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
 
+            homeViewModel.onActive()
+            homeViewModel.startLocationUpdates()
+            var fusedLocation = homeViewModel.location.fusedLocationClient
+            fusedLocation.lastLocation.addOnSuccessListener { Location ->
+                myPosition = GeoPoint(Location.latitude,Location.longitude)
+                if(myPosition != null){
+                    Marker(_binding.map).apply {
+                        position = myPosition
+                        _binding.map.overlays.add(this)
+                    }
+                }
+                this.onViewCreated(view, bundleOf())
+            }
+            homeViewModel.onInactive()
+
+        }
         _binding.buttonStart.setOnClickListener{
             permissionResultLauncher.launch(
                 arrayOf(

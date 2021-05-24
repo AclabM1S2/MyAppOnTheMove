@@ -10,13 +10,16 @@ import android.widget.Button
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.pdarcas.myapponthemove.R
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ModalBottomSheetFragmentMenu: BottomSheetDialogFragment() {
+    lateinit var model: SharedViewModel
     private var btnNaviguer: Button? = null
     private var btnPosition: Button? = null
     private var btnCharger: Button? = null
@@ -49,11 +52,19 @@ class ModalBottomSheetFragmentMenu: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        btnPosition=view.findViewById(R.id.btn_position)
         btnCharger = view.findViewById(R.id.btn_charger)
         btnNaviguer=view.findViewById(R.id.btn_naviguer)
-        btnPosition=view.findViewById(R.id.btn_position)
-        setListeners()
+        btnPosition?.setOnClickListener { model.actionPosition(position = true)
+            findNavController().popBackStack()}
+        btnNaviguer?.setOnClickListener { model.actionNaviguer(naviguer = true)
+            findNavController().popBackStack()}
+        btnCharger?.setOnClickListener { model.actionCharger(charger = true)
+            findNavController().popBackStack()}
+
+
+        //setListeners()
     }
 
     private fun setListeners() {
