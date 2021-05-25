@@ -27,12 +27,9 @@ import org.osmdroid.views.overlay.Polyline
 
 class HomeFragment : Fragment()  {
 
-    /*private lateinit var homeViewModel: HomeViewModel*/
     private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
-    private var tracking = false
-    private val i=0
 
     /* Boolean pour lancer la geolocalisation */
     private var positionUser:Boolean = false
@@ -186,7 +183,7 @@ class HomeFragment : Fragment()  {
         }
 
 
-        model.positionUser.observe(viewLifecycleOwner, Observer {
+        homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
 
             permissionResultLauncher.launch(
                 arrayOf(
