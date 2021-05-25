@@ -12,13 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.pdarcas.myapponthemove.R
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
@@ -27,17 +23,16 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 
-const val REQUEST_KEY = "request"
+
 class HomeFragment : Fragment()  {
 
     /*private lateinit var homeViewModel: HomeViewModel*/
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
     private var tracking = false
-    lateinit var model: SharedViewModel
-    /* Bouton pour ouvrir la modal*/
-    private var btnShowDialog: FloatingActionButton? = null
+    private val i=0
+
     /* Boolean pour lancer la geolocalisation */
     private var positionUser:Boolean = false
     /* Boolean pour lancer la navigation */
@@ -77,11 +72,6 @@ class HomeFragment : Fragment()  {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-
-        btnShowDialog = view.findViewById(R.id.fab)
-        btnShowDialog?.setOnClickListener {
-            findNavController().navigate(R.id.homeDialog)
-        }
 
 
         Configuration.getInstance().userAgentValue = requireContext().packageName
@@ -140,6 +130,7 @@ class HomeFragment : Fragment()  {
             val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
    /*         roadManager.addRequestOption("routeType=pedestrian")
 */
+
                 homeViewModel.onActive()
                 Log.d("PositionGeoLoc 0",homeViewModel.onActive().equals(false).toString())
 
@@ -166,44 +157,20 @@ class HomeFragment : Fragment()  {
             homeViewModel.onInactive()
         }
 
-        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        model.positionUser.observe(viewLifecycleOwner, Observer {
 
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-
-            homeViewModel.onActive()
-            homeViewModel.startLocationUpdates()
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                if(myPosition != null){
-                    Marker(_binding.map).apply {
-                        position = myPosition
-                        _binding.map.overlays.add(this)
-                        positionUser=false
-                    }
-                }
-                this.onViewCreated(view, bundleOf())
-
-            }
-            homeViewModel.onInactive()
-
+        homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
+            Log.e("nb passage", i.toString())
 
         }
         )
-        
 
-        model.actionCharger.observe(viewLifecycleOwner, Observer {
+
+        homeViewModel.actionCharger.observe(viewLifecycleOwner, Observer {
             charger = it
             Log.d("Home","RECEIVED start for open folder")
         })
-        model.actionNaviguer.observe(viewLifecycleOwner, Observer {
+        homeViewModel.actionNaviguer.observe(viewLifecycleOwner, Observer {
             naviguer = it
             Log.d("Home","RECEIVED start for navigation")
         })
