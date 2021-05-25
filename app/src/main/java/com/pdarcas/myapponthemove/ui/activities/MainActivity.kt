@@ -1,15 +1,12 @@
 package com.pdarcas.myapponthemove.ui.activities
 
+
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.pdarcas.myapponthemove.utils.activityViewBinding
-
-
 import com.pdarcas.myapponthemove.databinding.MainActivityBinding
-
-import com.pdarcas.myapponthemove.ui.home.ModalBottomSheetFragmentMenu
+import com.pdarcas.myapponthemove.ui.fragments.home.ModalBottomSheetFragmentMenu
+import com.pdarcas.myapponthemove.utils.activityViewBinding
 
 
 class MainActivity : AppCompatActivity() {

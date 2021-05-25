@@ -6,7 +6,6 @@ import com.pdarcas.myapponthemove.ui.fragments.home.HomeViewModel
 import com.pdarcas.myapponthemove.ui.fragments.login.LoginViewModel
 import com.pdarcas.myapponthemove.ui.fragments.register.RegisterViewModel
 import com.pdarcas.myapponthemove.utils.LocationLiveData
-import org.koin.androidx.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
