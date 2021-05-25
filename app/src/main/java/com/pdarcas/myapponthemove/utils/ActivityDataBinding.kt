@@ -1,4 +1,4 @@
-package com.mvince.m1test.utils
+package com.pdarcas.myapponthemove.utils
 
 import android.os.Looper
 import android.view.LayoutInflater

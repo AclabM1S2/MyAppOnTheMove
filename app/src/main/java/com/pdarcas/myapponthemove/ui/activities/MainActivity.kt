@@ -6,7 +6,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mvince.m1test.utils.activityViewBinding
+import com.pdarcas.myapponthemove.utils.activityViewBinding
+
 import com.pdarcas.myapponthemove.R
 
 import com.pdarcas.myapponthemove.databinding.MainActivityBinding
