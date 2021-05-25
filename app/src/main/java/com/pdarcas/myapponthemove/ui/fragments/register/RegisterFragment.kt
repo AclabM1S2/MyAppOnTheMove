@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
+import com.pdarcas.myapponthemove.databinding.FragmentRegisterBinding
 import com.pdarcas.myapponthemove.ui.activities.MainActivity
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,9 +20,7 @@ class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding by fragmentAutoCleared()
     private val registerViewModel: RegisterViewModel by viewModel()
 
-    private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-
-    }
+    //private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     override fun onCreateView(
         inflater: LayoutInflater,

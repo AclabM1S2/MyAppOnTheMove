@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.pdarcas.myapponthemove.databinding.FragmentLoginBinding
 import com.pdarcas.myapponthemove.ui.activities.MainActivity
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.viewModel

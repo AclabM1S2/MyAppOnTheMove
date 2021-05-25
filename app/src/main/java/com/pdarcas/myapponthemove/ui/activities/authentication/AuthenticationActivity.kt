@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
+import com.pdarcas.myapponthemove.databinding.AuthenticationActivityBinding
 import com.pdarcas.myapponthemove.ui.activities.MainActivity
+import com.pdarcas.myapponthemove.ui.fragments.login.LoginFragment
+import com.pdarcas.myapponthemove.ui.fragments.register.RegisterFragment
 import com.pdarcas.myapponthemove.utils.activityViewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
