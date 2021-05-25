@@ -1,6 +1,5 @@
-package com.pdarcas.myapponthemove.ui.home
+package com.pdarcas.myapponthemove.ui.fragments.home
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
