@@ -1,4 +1,4 @@
-package com.pdarcas.myapponthemove.data.datasources.repositories
+package com.pdarcas.myapponthemove.data.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
