@@ -1,8 +1,10 @@
 package com.pdarcas.myapponthemove.ui.fragments.login
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,7 +26,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return _binding.root
     }
@@ -60,13 +62,16 @@ class LoginFragment : Fragment() {
                         emailLogin.text.toString(),
                         passwordLogin.text.toString()
                     )
-                        .observe(viewLifecycleOwner, Observer {
+                        .observe(viewLifecycleOwner, {
                             it?.let {
                                 val intent = Intent(requireActivity(), MainActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 activity?.finish()
-                            } //TODO  IF NOT FOUND DISPLAY TOAST
+                            } ?: run {
+                                Toast.makeText(requireContext(), "Bad email or password", Toast.LENGTH_LONG).show()
+                                Log.d(ContentValues.TAG,"Login failed")
+                            }
                         })
                 }
             }

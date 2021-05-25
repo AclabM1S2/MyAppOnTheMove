@@ -18,6 +18,7 @@ class AuthRepository(private val firebaseAuthService: FirebaseAuthService) {
                 response.value = it.user
             }.addOnFailureListener { task ->
                 Log.w(ContentValues.TAG, "connectUserWithEmail:failure", task.cause)
+                response.value = null
             }
         return response
     }
@@ -30,6 +31,7 @@ class AuthRepository(private val firebaseAuthService: FirebaseAuthService) {
                 response.value = it.user
             }.addOnFailureListener { task ->
                 Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.cause)
+                response.value = null
             }
         return response
     }

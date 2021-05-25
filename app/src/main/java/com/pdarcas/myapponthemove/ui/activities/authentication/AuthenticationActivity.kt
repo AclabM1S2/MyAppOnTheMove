@@ -1,14 +1,15 @@
 package com.pdarcas.myapponthemove.ui.activities.authentication
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.pdarcas.myapponthemove.databinding.AuthenticationActivityBinding
 import com.pdarcas.myapponthemove.ui.activities.MainActivity
 import com.pdarcas.myapponthemove.ui.fragments.login.LoginFragment
@@ -24,26 +25,18 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        supportActionBar?.hide();
-        _binding.tabLayout.addTab(_binding.tabLayout.newTab().setText("Login"))
-        _binding.tabLayout.addTab(_binding.tabLayout.newTab().setText("SignUp"))
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        supportActionBar?.hide()
         _binding.tabLayout.tabGravity = TabLayout.GRAVITY_FILL
         _binding.viewPager.adapter =
-            LoginAdapter(supportFragmentManager, this, _binding.tabLayout.tabCount)
-        _binding.viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(_binding.tabLayout))
-
-        _binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-
-                _binding.viewPager.currentItem = tab.position
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
+            LoginAdapter(supportFragmentManager, this.lifecycle, _binding.tabLayout.tabCount)
+        TabLayoutMediator(
+            _binding.tabLayout,
+            _binding.viewPager
+        ) { tab: TabLayout.Tab, i: Int ->
+            tab.text = (if (i == 0) "Login" else "Register")
+        }.attach()
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -59,10 +52,12 @@ class AuthenticationActivity : AppCompatActivity() {
 
     internal class LoginAdapter(
         fragmentManager: FragmentManager,
-        var context: Context,
-        var totalTabs: Int
-    ) : FragmentPagerAdapter(fragmentManager) {
-        override fun getItem(position: Int): Fragment {
+        private val lifecycle: Lifecycle,
+        private val totalTabs: Int
+    ) : FragmentStateAdapter(fragmentManager, lifecycle) {
+
+        override fun getItemCount(): Int = totalTabs
+        override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> {
                     LoginFragment()
@@ -70,11 +65,8 @@ class AuthenticationActivity : AppCompatActivity() {
                 1 -> {
                     RegisterFragment()
                 }
-                else -> getItem(position)
+                else -> LoginFragment()
             }
         }
-
-        override fun getCount(): Int = totalTabs
-
     }
 }

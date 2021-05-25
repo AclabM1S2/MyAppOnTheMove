@@ -1,8 +1,10 @@
 package com.pdarcas.myapponthemove.ui.fragments.register
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,8 +21,6 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding by fragmentAutoCleared()
     private val registerViewModel: RegisterViewModel by viewModel()
-
-    //private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +65,11 @@ class RegisterFragment : Fragment() {
                 }
 
                 passwordRegister.text.length < 6 -> {
-                    Toast.makeText(requireActivity(), "PPassword too short, enter minimum 6 characters!", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireActivity(),
+                        "PPassword too short, enter minimum 6 characters!",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
 
@@ -74,14 +78,21 @@ class RegisterFragment : Fragment() {
                         emailRegister.text.toString(),
                         passwordRegister.text.toString()
                     )
-                        .observe(viewLifecycleOwner, Observer {
+                        .observe(viewLifecycleOwner, {
                             it?.let {
                                 val intent = Intent(requireActivity(), MainActivity::class.java)
                                 intent.flags =
                                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 activity?.finish()
-                            } //TODO  IF ERROR DISPLAY TOAST
+                            } ?: run {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Registration failed",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                Log.d(ContentValues.TAG, "Login failed")
+                            }
                         })
                 }
             }
