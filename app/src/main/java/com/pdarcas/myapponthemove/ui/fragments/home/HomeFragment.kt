@@ -153,7 +153,7 @@ class HomeFragment : Fragment()  {
                             if (road.mStatus != Road.STATUS_OK){
                                 Log.d("Road error bro : ",road.mStatus.toString())
                             }
-                            roadManager.addRequestOption("routeType=bicycle")
+                            /*roadManager.addRequestOption("routeType=bicycle")*/
                             val roadOverlay = RoadManager.buildRoadOverlay(road)
                             _binding.map.overlays.add(roadOverlay);
                             Log.d("PositionGeoLoc 2",currentLocation.toString() )
