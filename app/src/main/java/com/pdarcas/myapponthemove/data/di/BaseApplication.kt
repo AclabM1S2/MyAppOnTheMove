@@ -1,7 +1,10 @@
 package com.pdarcas.myapponthemove.data.di
 
 import android.app.Application
+import com.pdarcas.myapponthemove.data.di.module.RepositoryModules
+import com.pdarcas.myapponthemove.data.di.module.ServiceModules
 import com.pdarcas.myapponthemove.data.di.module.UtilsModule
+import com.pdarcas.myapponthemove.data.di.module.ViewModelModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
 import org.koin.android.ext.koin.androidLogger
@@ -18,6 +21,9 @@ class BaseApplication: Application() {
             androidFileProperties()
             modules(
                 listOf(
+                    ServiceModules.services,
+                    RepositoryModules.repositories,
+                    ViewModelModules.viewModels,
                     UtilsModule.locationModule
                 )
             )

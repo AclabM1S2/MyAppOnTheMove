@@ -1,55 +1,39 @@
-package com.pdarcas.myapponthemove.ui.home
+package com.pdarcas.myapponthemove.ui.fragments.home
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.pdarcas.myapponthemove.R
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.osmdroid.bonuspack.kml.KmlDocument
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
-import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 
-const val REQUEST_KEY = "request"
+
 class HomeFragment : Fragment()  {
 
     /*private lateinit var homeViewModel: HomeViewModel*/
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
     private var tracking = false
-    lateinit var model: SharedViewModel
-    /* Bouton pour ouvrir la modal*/
-    private var btnShowDialog: FloatingActionButton? = null
+    private val i=0
+
     /* Boolean pour lancer la geolocalisation */
     private var positionUser:Boolean = false
     /* Boolean pour lancer la navigation */
@@ -109,11 +93,6 @@ class HomeFragment : Fragment()  {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-
-        btnShowDialog = view.findViewById(R.id.fab)
-        btnShowDialog?.setOnClickListener {
-            findNavController().navigate(R.id.homeDialog)
-        }
 
 
         Configuration.getInstance().userAgentValue = requireContext().packageName
@@ -206,7 +185,6 @@ class HomeFragment : Fragment()  {
 
         }
 
-        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
         model.positionUser.observe(viewLifecycleOwner, Observer {
 
@@ -232,13 +210,13 @@ class HomeFragment : Fragment()  {
             }*/
         }
         )
-        
 
-        model.actionCharger.observe(viewLifecycleOwner, Observer {
+
+        homeViewModel.actionCharger.observe(viewLifecycleOwner, Observer {
             charger = it
             Log.d("Home","RECEIVED start for open folder")
         })
-        model.actionNaviguer.observe(viewLifecycleOwner, Observer {
+        homeViewModel.actionNaviguer.observe(viewLifecycleOwner, Observer {
             naviguer = it
             Log.d("Home","RECEIVED start for navigation")
             permissionResultLauncher.launch(

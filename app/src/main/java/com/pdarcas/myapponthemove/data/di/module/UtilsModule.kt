@@ -1,17 +1,14 @@
 package com.pdarcas.myapponthemove.data.di.module
 
 import android.content.Context
-import com.pdarcas.myapponthemove.ui.home.HomeViewModel
-import org.koin.android.ext.koin.androidContext
 import com.pdarcas.myapponthemove.utils.LocationLiveData
-import org.koin.core.KoinApplication
 import org.koin.dsl.module
 
 object UtilsModule {
 
-    val locationModule = module{
-        fun createHomeViewModel(liveData: LocationLiveData) = HomeViewModel(liveData)
+    val locationModule = module {
+        fun createLocationLiveData(context: Context) = LocationLiveData(context)
 
-        single { createHomeViewModel(LocationLiveData(androidContext()))}
+        single { createLocationLiveData(get()) }
     }
 }

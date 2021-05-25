@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.pdarcas.myapponthemove.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
 
     <dialog
-        android:id="@+id/homeDialog"
-        android:name="com.pdarcas.myapponthemove.ui.home.ModalBottomSheetFragmentMenu"
-        android:label="HomeDialog" />
+        android:id="@+id/modalBottomSheetFragmentMenu"
+        android:name="com.pdarcas.myapponthemove.ui.fragments.home.ModalBottomSheetFragmentMenu"
+        android:label="ModalBottomSheetFragmentMenu" />
+
+
 </navigation>
