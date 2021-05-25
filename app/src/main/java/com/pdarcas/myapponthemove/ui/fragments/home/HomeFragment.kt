@@ -9,23 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.pdarcas.myapponthemove.data.entities.RecordModel
+import com.pdarcas.myapponthemove.data.repositories.AuthRepository
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment()  {
+class HomeFragment(private val authRepository: AuthRepository) : Fragment()  {
 
     private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
@@ -37,7 +38,7 @@ class HomeFragment : Fragment()  {
     private var naviguer:Boolean = false
     /* Boolean pour charger un gpx */
     private var charger:Boolean = false
-
+    private lateinit var currentDate:String;
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         Log.e("PermissionCheck","Appel permission")
@@ -51,6 +52,8 @@ class HomeFragment : Fragment()  {
                     }
                 })
             } else if (naviguer) {
+                val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+                currentDate = sdf.format(Date())
                 homeViewModel.location.observe(viewLifecycleOwner, Observer {
                     val line = Polyline(_binding.map)
                     if(waypoints.isNotEmpty()){
@@ -112,7 +115,8 @@ class HomeFragment : Fragment()  {
 
 
         _binding.buttonStop.setOnClickListener{
-
+            //val record = RecordModel(UUID.randomUUID().toString(),currentDate,waypoints,)
+            //Log.e("Points", record.toString())
         }
 
         /* Observables de la Modal*/
