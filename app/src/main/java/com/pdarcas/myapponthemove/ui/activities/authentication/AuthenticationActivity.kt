@@ -36,7 +36,7 @@ class AuthenticationActivity : AppCompatActivity() {
         _binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
-                _binding.viewPager.setCurrentItem(tab.position)
+                _binding.viewPager.currentItem = tab.position
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
