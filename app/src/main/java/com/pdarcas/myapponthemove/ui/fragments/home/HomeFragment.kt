@@ -53,9 +53,11 @@ class HomeFragment : Fragment()  {
             } else if (naviguer) {
                 homeViewModel.location.observe(viewLifecycleOwner, Observer {
                     val line = Polyline(_binding.map)
-                    line.addPoint(GeoPoint(50.633333, 3.066667))
-                    line.addPoint(GeoPoint(50.833333, 3.866667))
+                    if(waypoints.isNotEmpty()){
+                        line.addPoint(waypoints.last())
+                    }
                     line.addPoint(GeoPoint(it.latitude,it.longitude))
+                    waypoints.add(GeoPoint(it.latitude,it.longitude))
                     Log.d("GeoPoint me : ", GeoPoint(it.latitude,it.longitude).toString())
                     _binding.map.overlays.add(line);
                 })
