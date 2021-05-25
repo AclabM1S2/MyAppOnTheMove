@@ -60,6 +60,8 @@ class HomeFragment : Fragment()  {
                     waypoints.add(GeoPoint(it.latitude,it.longitude))
                     Log.d("GeoPoint me : ", GeoPoint(it.latitude,it.longitude).toString())
                     _binding.map.overlays.add(line);
+                    _binding.buttonStop.visibility = View.VISIBLE
+
                 })
             } else if (charger) {
 
@@ -93,7 +95,6 @@ class HomeFragment : Fragment()  {
         StrictMode.setThreadPolicy(policy)
 
 
-
         Configuration.getInstance().userAgentValue = requireContext().packageName
         _binding.map.apply {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT)
@@ -109,84 +110,15 @@ class HomeFragment : Fragment()  {
 
         _binding.map.invalidate();
 
-        _binding.buttonMyPosition.setOnClickListener{
-
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                if(myPosition != null){
-                    Marker(_binding.map).apply {
-                        position = myPosition
-                        _binding.map.overlays.add(this)
-                    }
-                }
-                this.onViewCreated(view, bundleOf())
-             }
-
-        }
-
-        if(positionUser){
-            Log.d("Home","START")
-
-
-        }
-        _binding.buttonStart.setOnClickListener{
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-
-            homeViewModel.location.observe(viewLifecycleOwner, Observer {
-
-                val line = Polyline(_binding.map)
-                line.addPoint(GeoPoint(50.633333, 3.066667))
-                line.addPoint(GeoPoint(50.833333, 3.866667))
-                line.addPoint(GeoPoint(it.latitude,it.longitude))
-                _binding.map.overlays.add(line);
-
-
-            })
-
-            /*val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
-            roadManager.addRequestOption("routeType=pedestrian")
-                homeViewModel.onActive()
-                Log.d("PositionGeoLoc 0",homeViewModel.onActive().equals(false).toString())
-
-                        homeViewModel.startLocationUpdates()
-                        var fusedLocation = homeViewModel.location.fusedLocationClient
-                        fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                            var currentLocation = GeoPoint(Location.latitude,Location.longitude)
-                            Log.d("PositionGeoLoc 1",currentLocation.toString())
-                            waypoints.add(currentLocation)
-                            val road = roadManager.getRoad(waypoints)
-                            if (road.mStatus != Road.STATUS_OK){
-                                Log.d("Road error bro : ",road.mStatus.toString())
-                            }
-                            *//*roadManager.addRequestOption("routeType=bicycle")*//*
-                            val roadOverlay = RoadManager.buildRoadOverlay(road)
-                            _binding.map.overlays.add(roadOverlay);
-                            Log.d("PositionGeoLoc 2",currentLocation.toString() )
-                            this.onViewCreated(view, bundleOf())
-                        }*/
-
-        }
 
         _binding.buttonStop.setOnClickListener{
 
         }
 
+        /* Observables de la Modal*/
 
         homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
-
+            positionUser=it
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -194,19 +126,6 @@ class HomeFragment : Fragment()  {
                 )
             )
 
-/*            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                if(myPosition != null){
-                    Marker(_binding.map).apply {
-                        position = myPosition
-                        _binding.map.overlays.add(this)
-                        positionUser=false
-                    }
-                }
-                this.onViewCreated(view, bundleOf())
-
-            }*/
         }
         )
 
@@ -215,6 +134,7 @@ class HomeFragment : Fragment()  {
             charger = it
             Log.d("Home","RECEIVED start for open folder")
         })
+
         homeViewModel.actionNaviguer.observe(viewLifecycleOwner, Observer {
             naviguer = it
             Log.d("Home","RECEIVED start for navigation")
@@ -224,8 +144,10 @@ class HomeFragment : Fragment()  {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
+
         })
 
     }
 
 }
+
