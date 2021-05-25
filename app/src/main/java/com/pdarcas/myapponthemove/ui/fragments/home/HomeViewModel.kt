@@ -15,11 +15,11 @@ class HomeViewModel(val location : LocationLiveData) : ViewModel(){
     }
     val text: LiveData<String> = _text
 
-    fun onInactive() = location.onInactive()
+/*    fun onInactive() = location.onInactive()
 
     fun onActive() = location.onActive()
 
-    fun startLocationUpdates() = location.startLocationUpdates()
+    fun startLocationUpdates() = location.startLocationUpdates()*/
 
 
 
