@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.fragments.login.LoginFragment">
+        tools:context=".ui.fragments.logins.LoginFragment">
 
         <EditText
             android:id="@+id/etEmailLogin"
