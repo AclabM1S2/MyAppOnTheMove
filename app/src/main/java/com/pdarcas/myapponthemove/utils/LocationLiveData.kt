@@ -10,10 +10,9 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
 
+class LocationLiveData(context: Context) : LiveData<Location>() {
 
-class LocationLiveData(context: Context):LiveData<Location>() {
-
-    var fusedLocationClient=LocationServices.getFusedLocationProviderClient(context)
+    var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
 /*    public fun isActive(){
         return fusedLocationClient.applicationContext().
@@ -26,12 +25,11 @@ class LocationLiveData(context: Context):LiveData<Location>() {
     }
 
     @SuppressLint("MissingPermission")
-    public override fun onActive(){
+    public override fun onActive() {
         super.onActive()
         fusedLocationClient.lastLocation
-            .addOnSuccessListener{
-                    location: Location?->
-                location?.also{
+            .addOnSuccessListener { location: Location? ->
+                location?.also {
                     setLocationData(it)
                 }
             }
@@ -39,7 +37,7 @@ class LocationLiveData(context: Context):LiveData<Location>() {
     }
 
     @SuppressLint("MissingPermission")
-    fun startLocationUpdates(){
+    fun startLocationUpdates() {
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
@@ -47,25 +45,24 @@ class LocationLiveData(context: Context):LiveData<Location>() {
         )
     }
 
-
-    private val locationCallback=object:LocationCallback(){
-        override fun onLocationResult(locationResult: LocationResult?){
-            locationResult?:return
-            for(location in locationResult.locations){
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            locationResult ?: return
+            for (location in locationResult.locations) {
                 setLocationData(location)
             }
         }
     }
 
-    private fun setLocationData(location: Location){
-        value=location
+    private fun setLocationData(location: Location) {
+        value = location
     }
 
     companion object {
-        val locationRequest: LocationRequest =LocationRequest.create().apply{
-            interval=3000
+        val locationRequest: LocationRequest = LocationRequest.create().apply {
+            interval = 3000
             /*smallestDisplacement=2000f*/
-            priority=LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
