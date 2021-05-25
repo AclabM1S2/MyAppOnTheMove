@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id "org.sonarqube" version "3.1.1"
-    id'com.google.gms.google-services'
+
 }
 
 android {
@@ -73,7 +73,7 @@ dependencies {
 
     //osmdroid dependencies
     //implementation(name:'osmbonuspack_v6.6.0', ext:'aar')
-    implementation 'org.osmdroid:osmdroid-android:6.1.0'
+    implementation 'org.osmdroid:osmdroid-android:6.1.10'
     implementation 'org.apache.commons:commons-lang3:3.3.4'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'

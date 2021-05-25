@@ -8,7 +8,9 @@ import com.pdarcas.myapponthemove.utils.LocationLiveData
 
 
 class HomeViewModel(val location : LocationLiveData) : ViewModel(){
-
+    var positionUser = MutableLiveData<Boolean>()
+    var actionNaviguer = MutableLiveData<Boolean>()
+    var actionCharger = MutableLiveData<Boolean>()
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }

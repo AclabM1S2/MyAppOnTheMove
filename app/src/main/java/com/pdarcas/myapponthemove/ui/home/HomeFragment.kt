@@ -33,6 +33,7 @@ import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
+
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -43,12 +44,11 @@ import org.osmdroid.views.overlay.Marker
 class HomeFragment : Fragment()  {
 
     /*private lateinit var homeViewModel: HomeViewModel*/
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
     private var tracking = false
-
-    lateinit var model2 : SharedViewModel
+    private val i=0
 
     /* Boolean pour lancer la geolocalisation */
     private var positionUser:Boolean = false
@@ -147,6 +147,7 @@ class HomeFragment : Fragment()  {
             val roadManager: RoadManager = OSRMRoadManager(_binding.map.context)
    /*         roadManager.addRequestOption("routeType=pedestrian")
 */
+
                 homeViewModel.onActive()
                 Log.d("PositionGeoLoc 0",homeViewModel.onActive().equals(false).toString())
 
@@ -174,43 +175,19 @@ class HomeFragment : Fragment()  {
         }
 
 
-        model2 = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        model2.positionUser.observe(viewLifecycleOwner, Observer {
 
-            permissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-
-            homeViewModel.onActive()
-            homeViewModel.startLocationUpdates()
-            var fusedLocation = homeViewModel.location.fusedLocationClient
-            fusedLocation.lastLocation.addOnSuccessListener { Location ->
-                myPosition = GeoPoint(Location.latitude,Location.longitude)
-                if(myPosition != null){
-                    Marker(_binding.map).apply {
-                        position = myPosition
-                        _binding.map.overlays.add(this)
-
-                    }
-                }
-                this.onViewCreated(view, bundleOf())
-
-            }
-            homeViewModel.onInactive()
-
+        homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
+            Log.e("nb passage", i.toString())
 
         }
         )
-        
 
-        model2.actionCharger.observe(viewLifecycleOwner, Observer {
+
+        homeViewModel.actionCharger.observe(viewLifecycleOwner, Observer {
             charger = it
             Log.d("Home","RECEIVED start for open folder")
         })
-        model2.actionNaviguer.observe(viewLifecycleOwner, Observer {
+        homeViewModel.actionNaviguer.observe(viewLifecycleOwner, Observer {
             naviguer = it
             Log.d("Home","RECEIVED start for navigation")
         })
