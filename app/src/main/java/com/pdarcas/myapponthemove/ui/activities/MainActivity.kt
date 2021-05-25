@@ -9,6 +9,11 @@ import com.pdarcas.myapponthemove.ui.fragments.home.ModalBottomSheetFragmentMenu
 import com.pdarcas.myapponthemove.utils.activityViewBinding
 
 
+import com.pdarcas.myapponthemove.databinding.MainActivityBinding
+
+import com.pdarcas.myapponthemove.ui.home.ModalBottomSheetFragmentMenu
+
+
 class MainActivity : AppCompatActivity() {
     private val binding by activityViewBinding(MainActivityBinding::inflate)
 
@@ -26,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             bottomSheetFragmentMenu.show(supportFragmentManager, ModalBottomSheetFragmentMenu.TAG)
         }
     }
+
 
 }
 
