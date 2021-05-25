@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pdarcas.myapponthemove.R
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
@@ -27,7 +28,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 
-const val REQUEST_KEY = "request"
+
 class HomeFragment : Fragment()  {
 
     /*private lateinit var homeViewModel: HomeViewModel*/
@@ -35,9 +36,9 @@ class HomeFragment : Fragment()  {
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
     private var myPosition : GeoPoint? = null
     private var tracking = false
-    lateinit var model: SharedViewModel
-    /* Bouton pour ouvrir la modal*/
-    private var btnShowDialog: FloatingActionButton? = null
+
+    lateinit var model2 : SharedViewModel
+
     /* Boolean pour lancer la geolocalisation */
     private var positionUser:Boolean = false
     /* Boolean pour lancer la navigation */
@@ -77,11 +78,6 @@ class HomeFragment : Fragment()  {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-
-        btnShowDialog = view.findViewById(R.id.fab)
-        btnShowDialog?.setOnClickListener {
-            findNavController().navigate(R.id.homeDialog)
-        }
 
 
         Configuration.getInstance().userAgentValue = requireContext().packageName
@@ -166,9 +162,9 @@ class HomeFragment : Fragment()  {
             homeViewModel.onInactive()
         }
 
-        model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        model.positionUser.observe(viewLifecycleOwner, Observer {
+        model2 = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        model2.positionUser.observe(viewLifecycleOwner, Observer {
 
             permissionResultLauncher.launch(
                 arrayOf(
@@ -186,7 +182,7 @@ class HomeFragment : Fragment()  {
                     Marker(_binding.map).apply {
                         position = myPosition
                         _binding.map.overlays.add(this)
-                        positionUser=false
+
                     }
                 }
                 this.onViewCreated(view, bundleOf())
@@ -199,11 +195,11 @@ class HomeFragment : Fragment()  {
         )
         
 
-        model.actionCharger.observe(viewLifecycleOwner, Observer {
+        model2.actionCharger.observe(viewLifecycleOwner, Observer {
             charger = it
             Log.d("Home","RECEIVED start for open folder")
         })
-        model.actionNaviguer.observe(viewLifecycleOwner, Observer {
+        model2.actionNaviguer.observe(viewLifecycleOwner, Observer {
             naviguer = it
             Log.d("Home","RECEIVED start for navigation")
         })
