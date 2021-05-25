@@ -9,13 +9,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.data.repositories.AuthRepository
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
+import com.pdarcas.myapponthemove.ui.activities.authentication.AuthenticationActivity
+import com.pdarcas.myapponthemove.ui.activities.authentication.AuthenticationViewModel
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
+import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -26,7 +32,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class HomeFragment(private val authRepository: AuthRepository) : Fragment()  {
+class HomeFragment : Fragment()  {
 
     private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
@@ -39,6 +45,7 @@ class HomeFragment(private val authRepository: AuthRepository) : Fragment()  {
     /* Boolean pour charger un gpx */
     private var charger:Boolean = false
     private lateinit var currentDate:String;
+
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
         Log.e("PermissionCheck","Appel permission")
@@ -115,8 +122,10 @@ class HomeFragment(private val authRepository: AuthRepository) : Fragment()  {
 
 
         _binding.buttonStop.setOnClickListener{
-            //val record = RecordModel(UUID.randomUUID().toString(),currentDate,waypoints,)
-            //Log.e("Points", record.toString())
+            val record = RecordModel(UUID.randomUUID().toString(),currentDate,waypoints,homeViewModel.getCurrentUser()?.email)
+            Log.e("Points", record.toString())
+            _binding.buttonStop.visibility=View.GONE
+
         }
 
         /* Observables de la Modal*/
