@@ -57,7 +57,7 @@ workflows:
   sample: 
     jobs:
       - build-and-test
-      - sonarcloud:
-          context: SonarCloud
-          requires:
-            - build-and-test
+      # - sonarcloud:
+          # context: SonarCloud
+          # requires:
+            # - build-and-test

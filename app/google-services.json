@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "241938156274",
+    "project_id": "myapponthemove",
+    "storage_bucket": "myapponthemove.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241938156274:android:fd3cf4f7e522018a381e6b",
+        "android_client_info": {
+          "package_name": "com.pdarcas.myapponthemove"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "241938156274-ps4kq1cqo4tr9kqj1k71i8du51trk0q8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAarwB3K0uFDHcDKaQ2Cprmh1ca7psPD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "241938156274-ps4kq1cqo4tr9kqj1k71i8du51trk0q8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
