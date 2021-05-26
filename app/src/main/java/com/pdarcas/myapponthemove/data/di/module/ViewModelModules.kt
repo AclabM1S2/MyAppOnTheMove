@@ -14,7 +14,7 @@ object ViewModelModules {
         fun createLoginViewModel(authRepository: AuthRepository) = LoginViewModel(authRepository)
         fun createRegisterViewModel(authRepository: AuthRepository) = RegisterViewModel(authRepository)
         fun createAuthenticationViewModel(authRepository: AuthRepository) = AuthenticationViewModel(authRepository)
-        fun createHomeViewModel(liveData: LocationLiveData) = HomeViewModel(liveData)
+        fun createHomeViewModel(liveData: LocationLiveData,authRepository: AuthRepository) = HomeViewModel(liveData,authRepository)
 
         viewModel {
             createLoginViewModel(get())
@@ -29,7 +29,7 @@ object ViewModelModules {
         }
 
         viewModel {
-            createHomeViewModel(get())
+            createHomeViewModel(get(),get())
         }
     }
 }

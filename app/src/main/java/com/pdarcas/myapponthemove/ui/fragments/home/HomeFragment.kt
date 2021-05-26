@@ -1,28 +1,33 @@
 package com.pdarcas.myapponthemove.ui.fragments.home
 
 import android.Manifest
+import android.R.attr.data
 import android.annotation.SuppressLint
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.google.firebase.firestore.FirebaseFirestore
+import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment()  {
@@ -37,28 +42,31 @@ class HomeFragment : Fragment()  {
     private var naviguer:Boolean = false
     /* Boolean pour charger un gpx */
     private var charger:Boolean = false
-
+    /* POur la creation du RecordModel*/
+    private lateinit var currentDate:String;
+    private val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
 
     private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
-        Log.e("PermissionCheck","Appel permission")
+        Log.e("PermissionCheck", "Appel permission")
         if(!permission.values.contains((false))){
             if(positionUser) {
                 homeViewModel.location.observe(viewLifecycleOwner, Observer {
                     Marker(_binding.map).apply {
                         position = GeoPoint(it.latitude, it.longitude)
                         _binding.map.overlays.add(this)
-                        positionUser=false
+                        positionUser = false
                     }
                 })
             } else if (naviguer) {
+                currentDate = sdf.format(Date())
                 homeViewModel.location.observe(viewLifecycleOwner, Observer {
                     val line = Polyline(_binding.map)
-                    if(waypoints.isNotEmpty()){
+                    if (waypoints.isNotEmpty()) {
                         line.addPoint(waypoints.last())
                     }
-                    line.addPoint(GeoPoint(it.latitude,it.longitude))
-                    waypoints.add(GeoPoint(it.latitude,it.longitude))
-                    Log.d("GeoPoint me : ", GeoPoint(it.latitude,it.longitude).toString())
+                    line.addPoint(GeoPoint(it.latitude, it.longitude))
+                    waypoints.add(GeoPoint(it.latitude, it.longitude))
+                    Log.d("GeoPoint me : ", GeoPoint(it.latitude, it.longitude).toString())
                     _binding.map.overlays.add(line);
                     _binding.buttonStop.visibility = View.VISIBLE
 
@@ -112,13 +120,23 @@ class HomeFragment : Fragment()  {
 
 
         _binding.buttonStop.setOnClickListener{
+            val record = RecordModel(
+                UUID.randomUUID().toString(),
+                currentDate,
+                waypoints,
+                homeViewModel.getCurrentUser()?.email
+            )
+            Log.e("Points", record.toString())
+            val db = FirebaseFirestore.getInstance()
+            db.collection("records").add(record)
+            _binding.buttonStop.visibility=View.GONE
 
         }
 
         /* Observables de la Modal*/
 
         homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
-            positionUser=it
+            positionUser = it
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -132,12 +150,12 @@ class HomeFragment : Fragment()  {
 
         homeViewModel.actionCharger.observe(viewLifecycleOwner, Observer {
             charger = it
-            Log.d("Home","RECEIVED start for open folder")
+            Log.d("Home", "RECEIVED start for open folder")
         })
 
         homeViewModel.actionNaviguer.observe(viewLifecycleOwner, Observer {
             naviguer = it
-            Log.d("Home","RECEIVED start for navigation")
+            Log.d("Home", "RECEIVED start for navigation")
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
