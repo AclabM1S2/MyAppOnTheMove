@@ -57,6 +57,7 @@ class HomeFragment : Fragment()  {
                         positionUser = false
                     }
                 })
+                homeViewModel.location.removeObservers(viewLifecycleOwner)
             } else if (naviguer) {
                 currentDate = sdf.format(Date())
                 homeViewModel.location.observe(viewLifecycleOwner, Observer {
@@ -162,7 +163,8 @@ class HomeFragment : Fragment()  {
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.FOREGROUND_SERVICE
                 )
             )
 
