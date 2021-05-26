@@ -126,6 +126,9 @@ class HomeFragment : Fragment()  {
                 waypoints,
                 homeViewModel.getCurrentUser()?.email
             )
+
+            homeViewModel.location.removeObservers(viewLifecycleOwner)
+
             Log.e("Points", record.toString())
             val db = FirebaseFirestore.getInstance()
             db.collection("records").add(record)
