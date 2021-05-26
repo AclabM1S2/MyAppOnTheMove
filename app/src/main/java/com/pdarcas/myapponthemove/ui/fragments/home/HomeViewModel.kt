@@ -7,10 +7,12 @@ import com.pdarcas.myapponthemove.data.repositories.AuthRepository
 import com.pdarcas.myapponthemove.utils.LocationLiveData
 
 
-class HomeViewModel(val location : LocationLiveData, val authRepository: AuthRepository) : ViewModel(){
+class HomeViewModel(val location: LocationLiveData, val authRepository: AuthRepository) :
+    ViewModel() {
+
     var positionUser = MutableLiveData<Boolean>()
     var actionNaviguer = MutableLiveData<Boolean>()
     var actionCharger = MutableLiveData<Boolean>()
-    fun getCurrentUser()=authRepository.getCurrentFirebaseUser()
+    fun getCurrentUser() = authRepository.getCurrentFirebaseUser()
 
 }
