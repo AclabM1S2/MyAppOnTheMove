@@ -14,7 +14,7 @@ class StorageRepository(private val context: Context) {
 
     fun saveRecordToInternalStorage(filename: String, record: RecordModel): Boolean {
         return try {
-            context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+            context.openFileOutput("$filename.otm", Context.MODE_PRIVATE).use {
                 it.write(Json.encodeToString(record).toByteArray())
             }
             true
