@@ -12,6 +12,6 @@ object RepositoryModules {
         fun createStorageRepository(context: Context) = StorageRepository(context)
 
         single { createAuthRepository(get()) }
-        single { createAuthRepository(get()) }
+        single { createStorageRepository(get()) }
     }
 }
