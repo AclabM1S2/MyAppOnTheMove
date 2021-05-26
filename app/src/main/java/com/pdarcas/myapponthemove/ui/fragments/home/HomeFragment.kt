@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.firestore.FirebaseFirestore
 import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
@@ -30,54 +30,58 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment()  {
+class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding by fragmentAutoCleared()
-    private var myPosition : GeoPoint? = null
+    private var myPosition: GeoPoint? = null
 
     /* Boolean pour lancer la geolocalisation */
-    private var positionUser:Boolean = false
+    private var positionUser: Boolean = false
+
     /* Boolean pour lancer la navigation */
-    private var naviguer:Boolean = false
+    private var naviguer: Boolean = false
+
     /* Boolean pour charger un gpx */
-    private var charger:Boolean = false
+    private var charger: Boolean = false
+
     /* POur la creation du RecordModel*/
-    private lateinit var currentDate:String;
+    private lateinit var currentDate: String;
     private val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
 
-    private val permissionResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
-        Log.e("PermissionCheck", "Appel permission")
-        if(!permission.values.contains((false))){
-            if(positionUser) {
-                homeViewModel.location.observe(viewLifecycleOwner, Observer {
-                    Marker(_binding.map).apply {
-                        position = GeoPoint(it.latitude, it.longitude)
-                        _binding.map.overlays.add(this)
-                        positionUser = false
-                    }
-                })
-            } else if (naviguer) {
-                currentDate = sdf.format(Date())
-                homeViewModel.location.observe(viewLifecycleOwner, Observer {
-                    val line = Polyline(_binding.map)
-                    if (waypoints.isNotEmpty()) {
-                        line.addPoint(waypoints.last())
-                    }
-                    line.addPoint(GeoPoint(it.latitude, it.longitude))
-                    waypoints.add(GeoPoint(it.latitude, it.longitude))
-                    Log.d("GeoPoint me : ", GeoPoint(it.latitude, it.longitude).toString())
-                    _binding.map.overlays.add(line);
-                    _binding.buttonStop.visibility = View.VISIBLE
+    private val permissionResultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
+            Log.e("PermissionCheck", "Appel permission")
+            if (!permission.values.contains((false))) {
+                if (positionUser) {
+                    homeViewModel.location.observe(viewLifecycleOwner, Observer {
+                        Marker(_binding.map).apply {
+                            position = GeoPoint(it.latitude, it.longitude)
+                            _binding.map.overlays.add(this)
+                            positionUser = false
+                        }
+                    })
+                } else if (naviguer) {
+                    currentDate = sdf.format(Date())
+                    homeViewModel.location.observe(viewLifecycleOwner, Observer {
+                        val line = Polyline(_binding.map)
+                        if (waypoints.isNotEmpty()) {
+                            line.addPoint(waypoints.last())
+                        }
+                        line.addPoint(GeoPoint(it.latitude, it.longitude))
+                        waypoints.add(GeoPoint(it.latitude, it.longitude))
+                        Log.d("GeoPoint me : ", GeoPoint(it.latitude, it.longitude).toString())
+                        _binding.map.overlays.add(line);
+                        _binding.buttonStop.visibility = View.VISIBLE
 
-                })
-            } else if (charger) {
+                    })
+                } else if (charger) {
+
+                }
 
             }
 
         }
-
-    }
 
     val waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
@@ -88,12 +92,10 @@ class HomeFragment : Fragment()  {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding= FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         return _binding.root
     }
-
-
 
 
     @SuppressLint("MissingPermission")
@@ -110,26 +112,27 @@ class HomeFragment : Fragment()  {
 
             val mapController = controller
             mapController.setZoom(3.0)
-            if(myPosition != null){
+            if (myPosition != null) {
                 mapController.setCenter(myPosition)
             }
-            this.isTilesScaledToDpi=true
+            this.isTilesScaledToDpi = true
         }
 
         _binding.map.invalidate();
 
 
-        _binding.buttonStop.setOnClickListener{
+        _binding.buttonStop.setOnClickListener {
             val record = RecordModel(
                 UUID.randomUUID().toString(),
                 currentDate,
-                waypoints,
+                null,
                 homeViewModel.getCurrentUser()?.email
             )
+            record.setGeoPoints(waypoints)
             Log.e("Points", record.toString())
-            val db = FirebaseFirestore.getInstance()
-            db.collection("records").add(record)
-            _binding.buttonStop.visibility=View.GONE
+            //val db = FirebaseFirestore.getInstance()
+            //db.collection("records").add(record)
+            _binding.buttonStop.visibility = View.GONE
 
         }
 
