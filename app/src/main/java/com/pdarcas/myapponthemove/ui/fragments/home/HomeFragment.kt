@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.google.firebase.firestore.FirebaseFirestore
 import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
@@ -126,7 +127,8 @@ class HomeFragment : Fragment()  {
                 homeViewModel.getCurrentUser()?.email
             )
             Log.e("Points", record.toString())
-
+            val db = FirebaseFirestore.getInstance()
+            db.collection("records").add(record)
             _binding.buttonStop.visibility=View.GONE
 
         }
