@@ -1,6 +1,8 @@
 package com.pdarcas.myapponthemove.ui.fragments.login
 
+import android.app.AlertDialog
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -9,7 +11,10 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.databinding.adapters.ViewBindingAdapter
 import androidx.fragment.app.Fragment
 import com.pdarcas.myapponthemove.databinding.FragmentLoginBinding
 import com.pdarcas.myapponthemove.ui.activities.MainActivity
@@ -74,6 +79,33 @@ class LoginFragment : Fragment() {
                         })
                 }
             }
+        }
+
+        _binding.tvForgetPassword.setOnClickListener {
+
+            val emailInput = EditText(requireContext())
+            val alertDialog = AlertDialog.Builder(requireContext())
+            alertDialog.setTitle("Reset password?")
+            alertDialog.setMessage("Enter your email to receive a reset link.")
+            alertDialog.setView(emailInput)
+
+            alertDialog.setPositiveButton("yes", DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int ->
+                loginViewModel.resetPassword(emailInput.text.toString())
+                    .let { isEmailSent ->
+                        if (isEmailSent) {
+                            Toast.makeText(requireContext(), "Reset email sent", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(requireContext(), "Reset email failure", Toast.LENGTH_LONG).show()
+                        }
+                    }
+            })
+
+            alertDialog.setNegativeButton("no", DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int ->
+
+            })
+
+            alertDialog.show()
+
         }
     }
 }

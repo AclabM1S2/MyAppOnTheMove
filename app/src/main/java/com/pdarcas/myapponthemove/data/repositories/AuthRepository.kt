@@ -36,6 +36,18 @@ class AuthRepository(private val firebaseAuthService: FirebaseAuthService) {
         return response
     }
 
+    fun resetPassword(email: String): Boolean {
+        var response: Boolean = false;
+        firebaseAuthService.resetPassword(email)
+            .addOnSuccessListener {
+                Log.d(ContentValues.TAG, "sendEmailPassword:success")
+                response = true
+            }.addOnFailureListener {
+                Log.w(ContentValues.TAG, "sendResetPassword:failure : ${it.message}" )
+            }
+        return response
+    }
+
     fun signOut() {
         firebaseAuthService.signOut()
     }
