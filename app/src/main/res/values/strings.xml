@@ -6,4 +6,8 @@
     <string name="btn_naviguer">Naviguer</string>
     <string name="btn_charger_gpx">Charger GPX</string>
     <string name="btn_position">Ma position</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="logout">Logout</string>
+    <string name="fabDescription">button to display contextual menu</string>
 </resources>

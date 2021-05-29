@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data class="MainActivityBinding">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.activities.MainActivity">
 
-    </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+    <data class="MainActivityBinding" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/drawer_layout">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
 
-            <fragment
-                android:id="@+id/navigation_home"
-                android:name="com.pdarcas.myapponthemove.ui.fragments.home.HomeFragment"
-                android:label="@string/title_home"
-                tools:layout="@layout/fragment_home"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinatorLayout"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_width="match_parent" />
+                android:layout_marginBottom="?attr/actionBarSize">
+
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/navigation_home"
+                    android:name="com.pdarcas.myapponthemove.ui.fragments.home.HomeFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:label="@string/title_home"
+                    tools:layout="@layout/fragment_home" />
+
+                <FrameLayout
+                    android:id="@+id/scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.google.android.material.navigation.NavigationView
+                    android:id="@+id/navView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:headerLayout="@layout/nav_header"
+                    app:menu="@menu/nav_drawer_menu"
+                    android:layout_gravity="start"
+                    android:fitsSystemWindows="true"
+                    app:layout_behavior="@string/bottom_sheet_behavior"
+                    app:behavior_hideable="true"  />
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/bottom_app_bar"
@@ -35,7 +59,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:navigationIcon="@drawable/menu" />
+                app:navigationIcon="@drawable/ic_baseline_menu_24" />
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -43,8 +67,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/plus"
-                app:layout_anchor="@id/bottom_app_bar" />
+                app:layout_anchor="@id/bottom_app_bar"
+                android:contentDescription="@string/fabDescription" />
+
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
 
 </layout>

@@ -11,40 +11,52 @@ import com.pdarcas.myapponthemove.databinding.FragmentBottomModalBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class ModalBottomSheetFragmentMenu: BottomSheetDialogFragment() {
+class ModalBottomSheetFragmentMenu : BottomSheetDialogFragment() {
 
     private val model: HomeViewModel by sharedViewModel()
     private var _binding: FragmentBottomModalBinding by fragmentAutoCleared()
-    private  lateinit var btnNaviguer: Button
+    private lateinit var btnNaviguer: Button
     private lateinit var btnPosition: Button
     private lateinit var btnCharger: Button
-    companion object{
-        @JvmField val TAG = "ModalBottomSheetFragmentMenu"
-        @JvmStatic fun getInstance():ModalBottomSheetFragmentMenu{
+
+    companion object {
+        @JvmField
+        val TAG = "ModalBottomSheetFragmentMenu"
+        @JvmStatic
+        fun getInstance(): ModalBottomSheetFragmentMenu {
             return ModalBottomSheetFragmentMenu()
         }
     }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        _binding= FragmentBottomModalBinding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        _binding = FragmentBottomModalBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnPosition=_binding.btnPosition
+        btnPosition = _binding.btnPosition
         btnCharger = _binding.btnCharger
-        btnNaviguer=_binding.btnNaviguer
-        btnPosition?.setOnClickListener { model.positionUser.value=true
-            dismiss()}
-        btnNaviguer?.setOnClickListener { model.actionNaviguer.value=true
-            dismiss()}
-        btnCharger?.setOnClickListener { model.actionCharger.value=true
-            dismiss()}
-
+        btnNaviguer = _binding.btnNaviguer
+        btnPosition?.setOnClickListener {
+            model.positionUser.value = true
+            dismiss()
+        }
+        btnNaviguer?.setOnClickListener {
+            model.actionNaviguer.value = true
+            dismiss()
+        }
+        btnCharger?.setOnClickListener {
+            model.actionCharger.value = true
+            dismiss()
+        }
     }
-
 
 
 }
