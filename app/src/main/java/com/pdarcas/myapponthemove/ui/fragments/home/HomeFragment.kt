@@ -55,6 +55,8 @@ class HomeFragment : Fragment()  {
                 homeViewModel.location.observe(viewLifecycleOwner, Observer {
                     Marker(_binding.map).apply {
                         position = GeoPoint(it.latitude, it.longitude)
+                        _binding.map.controller.setZoom(16.0)
+                        _binding.map.controller.setCenter(position);
                         _binding.map.overlays.add(this)
                         positionUser = false
                     }
