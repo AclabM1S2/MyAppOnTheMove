@@ -4,6 +4,7 @@ import android.Manifest
 import android.R.attr.data
 import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
+import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.firebase.firestore.FirebaseFirestore
@@ -97,6 +99,7 @@ class HomeFragment : Fragment()  {
 
 
 
+    @RequiresApi(Build.VERSION_CODES.P)
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -144,7 +147,6 @@ class HomeFragment : Fragment()  {
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
 
@@ -163,7 +165,6 @@ class HomeFragment : Fragment()  {
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.FOREGROUND_SERVICE
                 )
             )
