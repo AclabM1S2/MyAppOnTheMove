@@ -56,7 +56,7 @@ class HomeFragment : Fragment()  {
                     Marker(_binding.map).apply {
                         position = GeoPoint(it.latitude, it.longitude)
                         _binding.map.controller.setZoom(16.0)
-                        _binding.map.controller.setCenter(position);
+                        _binding.map.controller.setCenter(position)
                         _binding.map.overlays.add(this)
                         positionUser = false
                     }
@@ -72,6 +72,8 @@ class HomeFragment : Fragment()  {
                     line.addPoint(GeoPoint(it.latitude, it.longitude))
                     waypoints.add(GeoPoint(it.latitude, it.longitude))
                     Log.d("GeoPoint me : ", GeoPoint(it.latitude, it.longitude).toString())
+                    _binding.map.controller.setZoom(16.0)
+                    _binding.map.controller.setCenter(waypoints.last())
                     _binding.map.overlays.add(line);
                     _binding.buttonStop.visibility = View.VISIBLE
 
