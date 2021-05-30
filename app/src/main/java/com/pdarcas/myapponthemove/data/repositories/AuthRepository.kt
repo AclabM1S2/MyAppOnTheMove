@@ -2,6 +2,7 @@ package com.pdarcas.myapponthemove.data.repositories
 
 import android.content.ContentValues
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.pdarcas.myapponthemove.data.datasources.remote.firebase.FirebaseAuthService
@@ -36,16 +37,13 @@ class AuthRepository(private val firebaseAuthService: FirebaseAuthService) {
         return response
     }
 
-    fun resetPassword(email: String): Boolean {
-        var response: Boolean = false;
+    fun resetPassword(email: String) {
         firebaseAuthService.resetPassword(email)
             .addOnSuccessListener {
                 Log.d(ContentValues.TAG, "sendEmailPassword:success")
-                response = true
             }.addOnFailureListener {
                 Log.w(ContentValues.TAG, "sendResetPassword:failure : ${it.message}" )
             }
-        return response
     }
 
     fun signOut() {

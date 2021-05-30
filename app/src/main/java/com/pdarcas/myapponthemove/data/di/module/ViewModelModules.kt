@@ -1,6 +1,7 @@
 package com.pdarcas.myapponthemove.data.di.module
 
 import com.pdarcas.myapponthemove.data.repositories.AuthRepository
+import com.pdarcas.myapponthemove.ui.activities.MainActivityViewModel
 import com.pdarcas.myapponthemove.ui.activities.authentication.AuthenticationViewModel
 import com.pdarcas.myapponthemove.ui.fragments.home.HomeViewModel
 import com.pdarcas.myapponthemove.ui.fragments.login.LoginViewModel
@@ -15,6 +16,7 @@ object ViewModelModules {
         fun createRegisterViewModel(authRepository: AuthRepository) = RegisterViewModel(authRepository)
         fun createAuthenticationViewModel(authRepository: AuthRepository) = AuthenticationViewModel(authRepository)
         fun createHomeViewModel(liveData: LocationLiveData,authRepository: AuthRepository) = HomeViewModel(liveData,authRepository)
+        fun createMainActivityViewModel(authRepository: AuthRepository) = MainActivityViewModel(authRepository)
 
         viewModel {
             createLoginViewModel(get())
@@ -30,6 +32,10 @@ object ViewModelModules {
 
         viewModel {
             createHomeViewModel(get(),get())
+        }
+
+        viewModel {
+            createMainActivityViewModel(get())
         }
     }
 }
