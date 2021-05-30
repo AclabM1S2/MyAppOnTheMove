@@ -23,7 +23,7 @@
                 android:layout_marginBottom="?attr/actionBarSize">
 
 
-                <androidx.fragment.app.FragmentContainerView
+                <fragment
                     android:id="@+id/navigation_home"
                     android:name="com.pdarcas.myapponthemove.ui.fragments.home.HomeFragment"
                     android:layout_width="match_parent"
@@ -31,10 +31,6 @@
                     android:label="@string/title_home"
                     tools:layout="@layout/fragment_home" />
 
-                <FrameLayout
-                    android:id="@+id/scrim"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
 
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/navView"

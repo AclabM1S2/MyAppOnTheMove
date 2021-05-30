@@ -55,24 +55,5 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        _binding.scrim.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                val baseColor = Color.BLACK
-                // 60% opacity
-                val baseAlpha = ResourcesCompat.getFloat(resources, R.dimen.material_emphasis_medium)
-                //Map slideOffset from [-1.0, 1.0] to [0.0, 1.0]
-                val offset = (slideOffset - (-1f)) / (1f - (-1f)) * (1f - 0f) + 0f
-                val alpha = com.google.android.material.math.MathUtils.lerp(0f, 255f, offset * baseAlpha).toInt()
-                val color = Color.argb(alpha, baseColor.red, baseColor.green, baseColor.blue)
-                _binding.scrim.setBackgroundColor(color)
-            }
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // empty -> overridden method
-            }
-        })
     }
 }
