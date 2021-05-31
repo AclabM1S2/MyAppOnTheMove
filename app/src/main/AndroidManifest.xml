@@ -23,7 +23,7 @@
         android:theme="@style/Theme.MyAppOnTheMove">
         <activity
             android:name=".ui.activities.MainActivity"
-            android:screenOrientation ="@string/orientation"
+            android:screenOrientation ="portrait"
         android:label="@string/app_name" />
         <activity
             android:name=".ui.activities.authentication.AuthenticationActivity"

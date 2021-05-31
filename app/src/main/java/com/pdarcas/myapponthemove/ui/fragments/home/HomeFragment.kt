@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
@@ -26,6 +27,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.Polyline
 import java.text.SimpleDateFormat
 import java.util.*
@@ -81,24 +83,13 @@ class HomeFragment : Fragment()  {
             } else if (charger) {
                 val db = FirebaseFirestore.getInstance()
                 val line = Polyline(_binding.map)
-
-                db.collection("records").whereEqualTo("id", "2c82a550-609a-4045-8bc9-736bb54d9a08")
+                //var points = ArrayList<GeoPoint>()
+                db.collection("records").whereEqualTo("id", "f31cb582-d402-4140-a4e7-10d0989949e8")
                     .get().addOnSuccessListener { result ->
+                        Log.e("Res",result.documents.toString())
+                        var record = result.documents[0].toObject<RecordModel>()
+                        Log.d("Resultat", record.toString())
 
-                        val points = result.documents[0].get("points")
-                        Log.d("Resultat", points.toString())
-
-
-                        //for(pts in points)
-                        //{
-                            //Log.e("test","a")
-                            //waypoints.add(GeoPoint(pts.latitude,pts.latitude))
-                            //line.addPoint(GeoPoint(pts.latitude,pts.latitude))
-                        //}
-                        //_binding.map.controller.setZoom(16.0)
-                        //_binding.map.controller.setCenter(waypoints.last())
-                        //line.isVisible
-                        //_binding.map.overlays.add(line)
 
                     }
 
@@ -155,7 +146,7 @@ class HomeFragment : Fragment()  {
             val record = RecordModel(
                 UUID.randomUUID().toString(),
                 currentDate,
-                waypoints,
+                //waypoints,
                 homeViewModel.getCurrentUser()?.email
             )
 
