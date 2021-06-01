@@ -15,19 +15,20 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
+import com.pdarcas.myapponthemove.data.entities.ListPts
 import com.pdarcas.myapponthemove.data.entities.RecordModel
+import com.pdarcas.myapponthemove.data.entities.WayPoints
+import com.pdarcas.myapponthemove.data.entities.pts
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
+import okhttp3.internal.userAgent
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.Polyline
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,7 +55,7 @@ class HomeFragment : Fragment()  {
         Log.e("PermissionCheck", "Appel permission")
         if(!permission.values.contains((false))){
             if(positionUser) {
-                homeViewModel.location.observe(viewLifecycleOwner, Observer {
+                homeViewModel.location.observe(viewLifecycleOwner, {
                     Marker(_binding.map).apply {
                         position = GeoPoint(it.latitude, it.longitude)
                         _binding.map.controller.setZoom(16.0)
@@ -66,7 +67,7 @@ class HomeFragment : Fragment()  {
                 homeViewModel.location.removeObservers(viewLifecycleOwner)
             } else if (naviguer) {
                 currentDate = sdf.format(Date())
-                homeViewModel.location.observe(viewLifecycleOwner, Observer {
+                homeViewModel.location.observe(viewLifecycleOwner, {
                     val line = Polyline(_binding.map)
                     if (waypoints.isNotEmpty()) {
                         line.addPoint(waypoints.last())
@@ -82,14 +83,22 @@ class HomeFragment : Fragment()  {
                 })
             } else if (charger) {
                 val db = FirebaseFirestore.getInstance()
-                val line = Polyline(_binding.map)
+                var line = Polyline(_binding.map)
                 //var points = ArrayList<GeoPoint>()
                 db.collection("records").whereEqualTo("id", "f31cb582-d402-4140-a4e7-10d0989949e8")
                     .get().addOnSuccessListener { result ->
-                        Log.e("Res",result.documents.toString())
-                        var record = result.documents[0].toObject<RecordModel>()
-                        Log.d("Resultat", record.toString())
+                        var tmp = result.documents[0]
+                        var theRecord=
+                            RecordModel(
+                                tmp.get("id") as String,
+                                tmp.get("name") as String,
+                                tmp.data?.get("points") as ArrayList<GeoPoint>,
+                                tmp.get("idUser") as String
+                            )
+                        Log.e("ddd'",result.documents[0].toObject(RecordModel::class.java)!!.toString())
 
+                        _binding.map.overlays.add(line)
+                        _binding.map.invalidate()
 
                     }
 
@@ -101,7 +110,7 @@ class HomeFragment : Fragment()  {
 
     }
 
-    val waypoints = ArrayList<GeoPoint>()
+    var waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
 
     override fun onCreateView(
@@ -146,13 +155,12 @@ class HomeFragment : Fragment()  {
             val record = RecordModel(
                 UUID.randomUUID().toString(),
                 currentDate,
-                //waypoints,
+                waypoints,
                 homeViewModel.getCurrentUser()?.email
             )
 
             homeViewModel.location.removeObservers(viewLifecycleOwner)
 
-            Log.e("Points", record.toString())
             val db = FirebaseFirestore.getInstance()
             db.collection("records").add(record)
             _binding.buttonStop.visibility=View.GONE
@@ -161,7 +169,7 @@ class HomeFragment : Fragment()  {
 
         /* Observables de la Modal*/
 
-        homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
+        homeViewModel.positionUser.observe(viewLifecycleOwner, {
             positionUser = it
             permissionResultLauncher.launch(
                 arrayOf(
@@ -182,7 +190,6 @@ class HomeFragment : Fragment()  {
                     FOREGROUND_SERVICE
                 )
             )
-
 
 
         })
