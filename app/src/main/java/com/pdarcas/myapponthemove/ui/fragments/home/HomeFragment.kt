@@ -88,15 +88,24 @@ class HomeFragment : Fragment()  {
                 db.collection("records").whereEqualTo("id", "f31cb582-d402-4140-a4e7-10d0989949e8")
                     .get().addOnSuccessListener { result ->
                         var tmp = result.documents[0]
-                        var theRecord=
+                        /*var theRecord=
                             RecordModel(
                                 tmp.get("id") as String,
                                 tmp.get("name") as String,
                                 tmp.data?.get("points") as ArrayList<GeoPoint>,
                                 tmp.get("idUser") as String
-                            )
-                        Log.e("ddd'",result.documents[0].toObject(RecordModel::class.java)!!.toString())
+                            )*/
+                        /*Log.e("ddd'",result.documents[0].toObject(RecordModel::class.java)!!.toString())*/
 
+                        var tmp2 = result.documents[0]["points"]
+                        Log.d("ddd",tmp2.)
+                        /*Log.d("posi",tmp2.)
+                        var position = GeoPoint(tmp2[0].latitude, tmp2[0].longitude)
+                        _binding.map.controller.setZoom(16.0)
+                        _binding.map.controller.setCenter(position)*/
+/*                        for (pt in tmp2){
+                            line.addPoint(GeoPoint(pt.latitude, pt.longitude))
+                        }*/
                         _binding.map.overlays.add(line)
                         _binding.map.invalidate()
 
