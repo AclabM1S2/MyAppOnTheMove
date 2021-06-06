@@ -13,9 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import androidx.databinding.adapters.ViewBindingAdapter
 import androidx.fragment.app.Fragment
 import com.pdarcas.myapponthemove.databinding.FragmentLoginBinding
 import com.pdarcas.myapponthemove.ui.activities.MainActivity

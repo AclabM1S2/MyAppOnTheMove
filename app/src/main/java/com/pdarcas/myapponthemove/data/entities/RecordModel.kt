@@ -5,7 +5,7 @@ import org.osmdroid.util.GeoPoint
 data class RecordModel(
     var id: String= "id",
     var name: String = "date",
-    var points: ArrayList<GeoPoint>? = ArrayList<GeoPoint>(),
+    var points: ArrayList<GeoPoint>? = listOf<GeoPoint>() as ArrayList<GeoPoint> ,
     var idUser:String? = "toto"
 ) {
     override fun toString(): String {

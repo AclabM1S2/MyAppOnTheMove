@@ -15,16 +15,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.firebase.firestore.FirebaseFirestore
-import com.pdarcas.myapponthemove.data.entities.ListPts
 import com.pdarcas.myapponthemove.data.entities.RecordModel
-import com.pdarcas.myapponthemove.data.entities.WayPoints
-import com.pdarcas.myapponthemove.data.entities.pts
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
-import okhttp3.internal.userAgent
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -95,8 +89,8 @@ class HomeFragment : Fragment()  {
                                 tmp.data?.get("points") as ArrayList<GeoPoint>,
                                 tmp.get("idUser") as String
                             )
-                        Log.e("ddd'",result.documents[0].toObject(RecordModel::class.java)!!.toString())
-
+                        Log.e("Record ",theRecord.toString())
+                        for(pts in theRecord.points!!)
                         _binding.map.overlays.add(line)
                         _binding.map.invalidate()
 
@@ -112,6 +106,7 @@ class HomeFragment : Fragment()  {
 
     var waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
