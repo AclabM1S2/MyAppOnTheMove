@@ -90,7 +90,6 @@ class HomeFragment : Fragment()  {
                                 tmp.get("idUser") as String
                             )
                         Log.e("Record ",theRecord.toString())
-                        for(pts in theRecord.points!!)
                         _binding.map.overlays.add(line)
                         _binding.map.invalidate()
 
