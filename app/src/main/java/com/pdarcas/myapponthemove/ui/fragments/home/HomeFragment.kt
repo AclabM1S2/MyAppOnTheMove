@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
+import com.pdarcas.myapponthemove.ui.adapters.RecordListAdapter
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.osmdroid.config.Configuration
@@ -76,6 +77,22 @@ class HomeFragment : Fragment()  {
 
                 })
             } else if (charger) {
+                var lstRecord:ArrayList<RecordModel> =ArrayList()
+
+                val db = FirebaseFirestore.getInstance()
+                db.collection("records").whereEqualTo("idUser", homeViewModel.getCurrentUser()?.email)
+                    .get().addOnSuccessListener { result ->
+                        //val record = RecordModel.fromFirebase(result.documents)
+                        result.documents.forEach {
+                            lstRecord.add(RecordModel.fromFirebase(it))
+                        }
+                        val adapter = RecordListAdapter(lstRecord) {
+                        }
+                        _binding.recyclerView.adapter=adapter
+
+                    }
+                /*
+                Fonctionnel pour afficher un parcours.
                 val db = FirebaseFirestore.getInstance()
                 var line = Polyline(_binding.map)
                 db.collection("records").whereEqualTo("id", "0e342a53-ec65-4b79-9e9a-298df5bff3a5")
@@ -87,6 +104,7 @@ class HomeFragment : Fragment()  {
                         _binding.map.controller.setCenter(record.points[0])
                         _binding.map.invalidate()
                     }
+                */
             }
 
         }
