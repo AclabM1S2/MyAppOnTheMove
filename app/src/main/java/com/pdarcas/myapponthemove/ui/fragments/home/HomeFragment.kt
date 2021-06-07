@@ -78,25 +78,15 @@ class HomeFragment : Fragment()  {
             } else if (charger) {
                 val db = FirebaseFirestore.getInstance()
                 var line = Polyline(_binding.map)
-                //var points = ArrayList<GeoPoint>()
-                db.collection("records").whereEqualTo("id", "f31cb582-d402-4140-a4e7-10d0989949e8")
+                db.collection("records").whereEqualTo("id", "0e342a53-ec65-4b79-9e9a-298df5bff3a5")
                     .get().addOnSuccessListener { result ->
-                        var tmp = result.documents[0]
-                        var theRecord=
-                            RecordModel(
-                                tmp.get("id") as String,
-                                tmp.get("name") as String,
-                                tmp.data?.get("points") as ArrayList<GeoPoint>,
-                                tmp.get("idUser") as String
-                            )
-                        Log.e("Record ",theRecord.toString())
+                        val record = RecordModel.fromFirebase(result.documents[0])
+                        record.points.forEach { line.addPoint(it) }
                         _binding.map.overlays.add(line)
+                        _binding.map.controller.setZoom(16.0)
+                        _binding.map.controller.setCenter(record.points[0])
                         _binding.map.invalidate()
-
                     }
-
-
-
             }
 
         }

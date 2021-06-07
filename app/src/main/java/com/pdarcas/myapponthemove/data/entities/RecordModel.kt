@@ -1,15 +1,32 @@
 package com.pdarcas.myapponthemove.data.entities
 
+import com.google.firebase.firestore.DocumentSnapshot
 import org.osmdroid.util.GeoPoint
 
 data class RecordModel(
-    var id: String= "id",
-    var name: String = "date",
-    var points: ArrayList<GeoPoint>? = listOf<GeoPoint>() as ArrayList<GeoPoint> ,
-    var idUser:String? = "toto"
+    val id: String,
+    val name: String,
+    val points: List<GeoPoint> = listOf(),
+    val idUser: String?
 ) {
-    override fun toString(): String {
-        return "RecordModel(id='$id', name='$name', points=$points, idUser='$idUser')"
+
+    companion object {
+        fun fromFirebase(document: DocumentSnapshot): RecordModel =
+            RecordModel(
+                document["id"] as String,
+                document["name"] as String,
+                toGeoPoints(document.data?.get("points") as List<Map<String, Any>>),
+                document["idUser"] as String
+            )
+
+        private fun toGeoPoints(geoPointsMap: List<Map<String, Any>>): List<GeoPoint> =
+            geoPointsMap
+                .map {
+                    GeoPoint(
+                        it["latitude"] as Double,
+                        it["longitude"] as Double,
+                    )
+                }
     }
 }
 
