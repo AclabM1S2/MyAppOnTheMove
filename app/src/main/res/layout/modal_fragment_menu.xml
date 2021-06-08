@@ -23,17 +23,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         />
-    <Button
-        android:id="@+id/btn_charger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        app:backgroundTint="@color/colorBackground"
-        android:text="@string/btn_charger_gpx"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textColor="@android:color/white"
-        />
+
     <Button
         android:id="@+id/btn_position"
         android:layout_width="match_parent"

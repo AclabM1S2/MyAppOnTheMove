@@ -44,7 +44,6 @@ class ModalBottomSheetFragmentMenu : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btnPosition = _binding.btnPosition
-        btnCharger = _binding.btnCharger
         btnNaviguer = _binding.btnNaviguer
         btnPosition?.setOnClickListener {
             model.positionUser.value = true
@@ -54,10 +53,7 @@ class ModalBottomSheetFragmentMenu : BottomSheetDialogFragment() {
             model.actionNaviguer.value = true
             dismiss()
         }
-        btnCharger?.setOnClickListener {
-            model.actionCharger.value = true
-            dismiss()
-        }
+
         var lstRecord:ArrayList<RecordModel> =ArrayList()
 
         val db = FirebaseFirestore.getInstance()
