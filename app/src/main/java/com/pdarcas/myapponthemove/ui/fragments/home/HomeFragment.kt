@@ -1,9 +1,8 @@
 package com.pdarcas.myapponthemove.ui.fragments.home
 
 import android.Manifest
-import android.R.attr.data
+import android.Manifest.permission.FOREGROUND_SERVICE
 import android.annotation.SuppressLint
-import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
@@ -11,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -26,7 +24,6 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -52,7 +49,7 @@ class HomeFragment : Fragment()  {
         Log.e("PermissionCheck", "Appel permission")
         if(!permission.values.contains((false))){
             if(positionUser) {
-                homeViewModel.location.observe(viewLifecycleOwner, Observer {
+                homeViewModel.location.observe(viewLifecycleOwner, {
                     Marker(_binding.map).apply {
                         position = GeoPoint(it.latitude, it.longitude)
                         _binding.map.controller.setZoom(16.0)
@@ -64,7 +61,7 @@ class HomeFragment : Fragment()  {
                 homeViewModel.location.removeObservers(viewLifecycleOwner)
             } else if (naviguer) {
                 currentDate = sdf.format(Date())
-                homeViewModel.location.observe(viewLifecycleOwner, Observer {
+                homeViewModel.location.observe(viewLifecycleOwner, {
                     val line = Polyline(_binding.map)
                     if (waypoints.isNotEmpty()) {
                         line.addPoint(waypoints.last())
@@ -80,14 +77,27 @@ class HomeFragment : Fragment()  {
                 })
             } else if (charger) {
 
+                val db = FirebaseFirestore.getInstance()
+                var line = Polyline(_binding.map)
+                db.collection("records").whereEqualTo("id", homeViewModel.idNav.value)
+                    .get().addOnSuccessListener { result ->
+                        val record = RecordModel.fromFirebase(result.documents[0])
+                        record.points.forEach { line.addPoint(it) }
+                        _binding.map.overlays.add(line)
+                        _binding.map.controller.setZoom(16.0)
+                        _binding.map.controller.setCenter(record.points[0])
+                        _binding.map.invalidate()
+                    }
+
             }
 
         }
 
     }
 
-    val waypoints = ArrayList<GeoPoint>()
+    var waypoints = ArrayList<GeoPoint>()
     val endPoint = GeoPoint(50.633333, 3.066667)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -137,7 +147,6 @@ class HomeFragment : Fragment()  {
 
             homeViewModel.location.removeObservers(viewLifecycleOwner)
 
-            Log.e("Points", record.toString())
             val db = FirebaseFirestore.getInstance()
             db.collection("records").add(record)
             _binding.buttonStop.visibility=View.GONE
@@ -146,7 +155,7 @@ class HomeFragment : Fragment()  {
 
         /* Observables de la Modal*/
 
-        homeViewModel.positionUser.observe(viewLifecycleOwner, Observer {
+        homeViewModel.positionUser.observe(viewLifecycleOwner, {
             positionUser = it
             permissionResultLauncher.launch(
                 arrayOf(
@@ -161,6 +170,14 @@ class HomeFragment : Fragment()  {
         homeViewModel.actionCharger.observe(viewLifecycleOwner, Observer {
             charger = it
             Log.d("Home", "RECEIVED start for open folder")
+            permissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    FOREGROUND_SERVICE
+                )
+            )
+
+
         })
 
         homeViewModel.actionNaviguer.observe(viewLifecycleOwner, Observer {
@@ -169,7 +186,7 @@ class HomeFragment : Fragment()  {
             permissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.FOREGROUND_SERVICE
+                    FOREGROUND_SERVICE
                 )
             )
 

@@ -1,6 +1,5 @@
 package com.pdarcas.myapponthemove.ui.fragments.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.pdarcas.myapponthemove.data.repositories.AuthRepository
@@ -11,6 +10,7 @@ class HomeViewModel(val location : LocationLiveData, val authRepository: AuthRep
     var positionUser = MutableLiveData<Boolean>()
     var actionNaviguer = MutableLiveData<Boolean>()
     var actionCharger = MutableLiveData<Boolean>()
+    var idNav = MutableLiveData<String>()
     fun getCurrentUser()=authRepository.getCurrentFirebaseUser()
 
 }

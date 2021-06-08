@@ -2,7 +2,6 @@ package com.pdarcas.myapponthemove.data.repositories
 
 import android.content.ContentValues
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.pdarcas.myapponthemove.data.datasources.remote.firebase.FirebaseAuthService

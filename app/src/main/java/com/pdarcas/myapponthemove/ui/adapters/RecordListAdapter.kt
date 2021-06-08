@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.R
+import com.pdarcas.myapponthemove.data.entities.RecordModel
 
-class RecordListAdapter (private val list: List<RecordModel>, val click:(RecordModel)->Unit): RecyclerView.Adapter<RecordListAdapter.RecordViewHolder>(){
+class RecordListAdapter( private val list: List<RecordModel>, val click:(RecordModel)->Unit): RecyclerView.Adapter<RecordListAdapter.RecordViewHolder>(){
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -18,7 +18,9 @@ class RecordListAdapter (private val list: List<RecordModel>, val click:(RecordM
     }
 
     override fun onBindViewHolder(holder: RecordListAdapter.RecordViewHolder, position: Int) {
-        holder.bind(list[position])
+        val record=list[position]
+        holder.bind(record)
+        holder.itemView.setOnClickListener { click(record) }
     }
 
     override fun getItemCount()= list.size
@@ -27,7 +29,7 @@ class RecordListAdapter (private val list: List<RecordModel>, val click:(RecordM
         fun bind(record:RecordModel){
             itemView.findViewById<TextView>(R.id.recordTextView).text=record.name
             itemView.setOnClickListener {
-                click.invoke(record)
+
             }
         }
 

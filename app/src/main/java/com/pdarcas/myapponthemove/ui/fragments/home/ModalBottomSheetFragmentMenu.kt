@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.pdarcas.myapponthemove.R
+import com.google.firebase.firestore.FirebaseFirestore
+import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentBottomModalBinding
+import com.pdarcas.myapponthemove.ui.adapters.RecordListAdapter
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -42,7 +44,6 @@ class ModalBottomSheetFragmentMenu : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btnPosition = _binding.btnPosition
-        btnCharger = _binding.btnCharger
         btnNaviguer = _binding.btnNaviguer
         btnPosition?.setOnClickListener {
             model.positionUser.value = true
@@ -52,10 +53,31 @@ class ModalBottomSheetFragmentMenu : BottomSheetDialogFragment() {
             model.actionNaviguer.value = true
             dismiss()
         }
-        btnCharger?.setOnClickListener {
-            model.actionCharger.value = true
-            dismiss()
-        }
+
+        var lstRecord:ArrayList<RecordModel> =ArrayList()
+
+        val db = FirebaseFirestore.getInstance()
+        db.collection("records").whereEqualTo("idUser", model.getCurrentUser()?.email)
+            .get().addOnSuccessListener { result ->
+                //val record = RecordModel.fromFirebase(result.documents)
+                result.documents.forEach {
+                    lstRecord.add(RecordModel.fromFirebase(it))
+                }
+                if(lstRecord.isNotEmpty()){
+                    _binding.textView.visibility=View.VISIBLE
+                    _binding.recyclerView.visibility=View.VISIBLE
+                }
+                val adapter = RecordListAdapter(lstRecord) { recordModel ->
+                    recordModel.id.also {
+                        model.idNav.value = it
+                        model.actionCharger.value = true
+                        dismiss()
+                    }
+                }
+                _binding.recyclerView.adapter=adapter
+
+
+            }
     }
 
 

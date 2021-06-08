@@ -1,15 +1,8 @@
 package com.pdarcas.myapponthemove.ui.activities
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
-import androidx.core.math.MathUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.pdarcas.myapponthemove.R
 import com.pdarcas.myapponthemove.databinding.MainActivityBinding
