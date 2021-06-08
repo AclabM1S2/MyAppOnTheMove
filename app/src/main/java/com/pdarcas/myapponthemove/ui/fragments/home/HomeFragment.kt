@@ -17,7 +17,6 @@ import androidx.lifecycle.Observer
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pdarcas.myapponthemove.data.entities.RecordModel
 import com.pdarcas.myapponthemove.databinding.FragmentHomeBinding
-import com.pdarcas.myapponthemove.ui.adapters.RecordListAdapter
 import com.pdarcas.myapponthemove.utils.fragmentAutoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.osmdroid.config.Configuration
@@ -80,7 +79,7 @@ class HomeFragment : Fragment()  {
 
                 val db = FirebaseFirestore.getInstance()
                 var line = Polyline(_binding.map)
-                db.collection("records").whereEqualTo("id", "0e342a53-ec65-4b79-9e9a-298df5bff3a5")
+                db.collection("records").whereEqualTo("id", homeViewModel.idNav.value)
                     .get().addOnSuccessListener { result ->
                         val record = RecordModel.fromFirebase(result.documents[0])
                         record.points.forEach { line.addPoint(it) }

@@ -71,9 +71,15 @@ class ModalBottomSheetFragmentMenu : BottomSheetDialogFragment() {
                     _binding.textView.visibility=View.VISIBLE
                     _binding.recyclerView.visibility=View.VISIBLE
                 }
-                val adapter = RecordListAdapter(lstRecord) {
+                val adapter = RecordListAdapter(lstRecord) { recordModel ->
+                    recordModel.id.also {
+                        model.idNav.value = it
+                        model.actionCharger.value = true
+                        dismiss()
+                    }
                 }
                 _binding.recyclerView.adapter=adapter
+
 
             }
     }

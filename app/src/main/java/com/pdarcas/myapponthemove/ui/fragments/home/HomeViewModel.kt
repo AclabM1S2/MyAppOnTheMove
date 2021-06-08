@@ -10,6 +10,7 @@ class HomeViewModel(val location : LocationLiveData, val authRepository: AuthRep
     var positionUser = MutableLiveData<Boolean>()
     var actionNaviguer = MutableLiveData<Boolean>()
     var actionCharger = MutableLiveData<Boolean>()
+    var idNav = MutableLiveData<String>()
     fun getCurrentUser()=authRepository.getCurrentFirebaseUser()
 
 }
