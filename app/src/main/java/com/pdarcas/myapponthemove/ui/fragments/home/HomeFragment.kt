@@ -77,6 +77,7 @@ class HomeFragment : Fragment()  {
                 })
             } else if (charger) {
 
+                _binding.map.overlays.clear()
                 val db = FirebaseFirestore.getInstance()
                 var line = Polyline(_binding.map)
                 db.collection("records").whereEqualTo("id", homeViewModel.idNav.value)
