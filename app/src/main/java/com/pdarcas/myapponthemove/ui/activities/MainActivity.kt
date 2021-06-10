@@ -18,7 +18,7 @@ import com.pdarcas.myapponthemove.utils.activityViewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayOutputStream
 
-class MainActivity : AppCompatActivity() {’
+class MainActivity : AppCompatActivity() {
     private val _binding by activityViewBinding(MainActivityBinding::inflate)
     private val mainActivityViewModel: MainActivityViewModel by viewModel()
     private val REQUEST_IMAGE_CAPTURE = 100
