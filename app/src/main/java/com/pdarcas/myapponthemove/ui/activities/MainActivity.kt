@@ -8,9 +8,7 @@ import android.provider.MediaStore
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
 import com.pdarcas.myapponthemove.R
 import com.pdarcas.myapponthemove.databinding.MainActivityBinding
@@ -19,7 +17,6 @@ import com.pdarcas.myapponthemove.ui.fragments.home.ModalBottomSheetFragmentMenu
 import com.pdarcas.myapponthemove.utils.activityViewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     private val _binding by activityViewBinding(MainActivityBinding::inflate)
